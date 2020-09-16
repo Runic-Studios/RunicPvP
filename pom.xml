@@ -53,6 +53,11 @@
     </build>
 
     <repositories>
+        <!-- HolographicDisplays Repo -->
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
         <repository>
             <id>papermc-repo</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
@@ -64,11 +69,27 @@
     </repositories>
 
     <dependencies>
+        <!-- HolographicDisplays API -->
+        <dependency>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Paper API -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.15.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- RunicCore -->
+        <dependency>
+            <groupId>com.runicrealms.plugin</groupId>
+            <artifactId>RunicCore</artifactId>
+            <version>1.15.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/RunicCore-1.15.2.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
