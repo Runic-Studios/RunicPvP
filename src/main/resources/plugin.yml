@@ -3,3 +3,4 @@ version: ${project.version}
 main: com.runicrealms.plugin.RunicPvP
 api-version: 1.15
 authors: [Skyfallin]
+softdepend: [HolographicDisplays]
