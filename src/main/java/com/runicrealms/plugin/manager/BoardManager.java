@@ -3,7 +3,6 @@ package com.runicrealms.plugin.manager;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.runicrealms.plugin.RunicPvP;
-import com.runicrealms.plugin.api.RunicCoreAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -27,7 +26,7 @@ public class BoardManager {
     private void refreshBoard(Hologram hologram) {
         hologram.clearLines();
         hologram.appendTextLine(BOARD_TITLE);
-        Map<Player, Integer> ratings = RunicCoreAPI.getOutlawRatings();
+        Map<Player, Integer> ratings = RunicPvP.getOutlawManager().getOutlawRatings();
         int count = 0;
         for (Map.Entry<Player, Integer> player : ratings.entrySet()) {
             if (count >= 5) return;
