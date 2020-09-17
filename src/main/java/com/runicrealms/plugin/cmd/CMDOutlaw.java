@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.cmd;
 
 import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.manager.OutlawManager;
+import com.runicrealms.plugin.api.RunicPvPAPI;
 import com.runicrealms.plugin.utilities.NametagUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -15,16 +15,16 @@ public class CMDOutlaw implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         // outlaw <player.name>
-        if (!sender.isOp())
-            return true;
+        if (!sender.isOp()) return true;
 
         Player pl = Bukkit.getPlayer(args[0]);
-        if (pl == null)
-            return true;
+        if (pl == null) return true;
 
         // toggle their current outlaw status from whatever it currently is, set their rating to default EVERY toggle
-        RunicCoreAPI.getPlayerCache(pl).setOutlaw(!OutlawManager.isOutlaw(pl));
-        RunicCoreAPI.getPlayerCache(pl).setRating(RunicCoreAPI.getBaseOutlawRating());
+        // if its higher than the base
+        RunicCoreAPI.getPlayerCache(pl).setOutlaw(!RunicPvPAPI.isOutlaw(pl));
+        if (RunicCoreAPI.getPlayerCache(pl).getRating() > RunicCoreAPI.getBaseOutlawRating())
+            RunicCoreAPI.getPlayerCache(pl).setRating(RunicCoreAPI.getBaseOutlawRating());
 
         NametagUtil.updateNametag(pl);
         return true;

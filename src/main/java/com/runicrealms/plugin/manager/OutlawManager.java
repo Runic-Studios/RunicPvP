@@ -14,10 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("FieldCanBeLocal")
 public class OutlawManager {
 
-    public static boolean isOutlaw(Player pl) {
-        return RunicCore.getCacheManager().getPlayerCaches().get(pl).getIsOutlaw();
-    }
-
     /**
      * Method to calculate rating changes for outlaw kills
      * @param damager player to receive rating

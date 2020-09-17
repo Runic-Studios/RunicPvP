@@ -4,3 +4,7 @@ main: com.runicrealms.plugin.RunicPvP
 api-version: 1.15
 authors: [Skyfallin]
 softdepend: [HolographicDisplays]
+commands:
+  outlaw:
+    usage: /<commands>
+    description: Change the outlaw status of a player

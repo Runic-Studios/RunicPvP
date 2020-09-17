@@ -1,7 +1,10 @@
 package com.runicrealms.plugin;
 
+import com.runicrealms.plugin.cmd.CMDOutlaw;
+import com.runicrealms.plugin.listener.OutlawListener;
 import com.runicrealms.plugin.manager.BoardManager;
 import com.runicrealms.plugin.manager.OutlawManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +19,8 @@ public final class RunicPvP extends JavaPlugin {
         plugin = this;
         boardManager = new BoardManager();
         outlawManager = new OutlawManager();
+        Bukkit.getServer().getPluginManager().registerEvents(new OutlawListener(), this);
+        getCommand("outlaw").setExecutor(new CMDOutlaw());
     }
 
     @Override
