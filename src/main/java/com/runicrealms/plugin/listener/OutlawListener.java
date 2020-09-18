@@ -9,12 +9,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+// TODO: safe zone listener?
 public class OutlawListener implements Listener {
 
     @EventHandler
     public void onSpellDamage(SpellDamageEvent e) {
         if (e.getEntity() instanceof Player && (!RunicPvPAPI.isOutlaw(((Player) e.getEntity()))
-                || !RunicPvPAPI.isOutlaw(e.getPlayer()))) {
+                || !RunicPvPAPI.isOutlaw(e.getPlayer()))
+                && !RunicPvP.getDuelManager().areDueling(e.getPlayer(), (Player) e.getEntity())) {
             e.setCancelled(true);
         }
     }
@@ -22,7 +24,8 @@ public class OutlawListener implements Listener {
     @EventHandler
     public void onWeaponDamage(WeaponDamageEvent e) {
         if (e.getEntity() instanceof Player && (!RunicPvPAPI.isOutlaw(((Player) e.getEntity()))
-                || !RunicPvPAPI.isOutlaw(e.getPlayer()))) {
+                || !RunicPvPAPI.isOutlaw(e.getPlayer()))
+                && !RunicPvP.getDuelManager().areDueling(e.getPlayer(), (Player) e.getEntity())) {
             e.setCancelled(true);
         }
     }
