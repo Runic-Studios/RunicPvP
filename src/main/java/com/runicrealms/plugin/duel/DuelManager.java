@@ -3,7 +3,6 @@ package com.runicrealms.plugin.duel;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.events.RunicDeathEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +13,6 @@ import java.util.HashSet;
 @SuppressWarnings("deprecation")
 public class DuelManager implements Listener {
 
-    private static final int DUEL_RADIUS = 30; // max blocks players can leave from starting position before forfeiting
     private final HashSet<DuelRequest> duelRequests;
     private final HashSet<Duel> currentDuels;
 
@@ -22,13 +20,15 @@ public class DuelManager implements Listener {
         duelRequests = new HashSet<>();
         currentDuels = new HashSet<>();
         RunicPvP.inst().getServer().getPluginManager().registerEvents(this, RunicPvP.inst());
+        Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::tryRequestTimeout, 0, 20L);
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::checkDuelRadius, 0, 20L);
     }
 
     @EventHandler
     public void onRunicDeath(RunicDeathEvent e) {
         for (Duel duel : currentDuels) {
-            if (e.getVictim().equals(duel.getChallenger()) || e.getVictim().equals(duel.getDefender())) {
+            if ((e.getKiller().equals(duel.getChallenger()) || e.getKiller().equals(duel.getDefender())
+                    && (e.getVictim().equals(duel.getChallenger()) || e.getVictim().equals(duel.getDefender())))) {
                 e.setCancelled(true);
                 if (e.getKiller() == duel.getChallenger())
                     duel.setDuelResult(IDuel.DuelResult.VICTORY);
@@ -39,17 +39,23 @@ public class DuelManager implements Listener {
         }
     }
 
+    private void tryRequestTimeout() {
+        for (DuelRequest duelRequest : duelRequests) {
+            long startTime = duelRequest.getRequestTime();
+            if (System.currentTimeMillis() - startTime > (DuelRequest.getRequestTimeout() * 1000)) {
+                duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.TIMEOUT);
+            }
+        }
+    }
+
     private void checkDuelRadius() {
         for (Duel duel : currentDuels) {
             Location startingLoc = duel.getDuelLocation();
             Location challengerLoc = duel.getChallenger().getLocation();
             Location defenderLoc = duel.getDefender().getLocation();
-            if (startingLoc.distanceSquared(challengerLoc) > (DUEL_RADIUS * DUEL_RADIUS)) {
+            if (startingLoc.distanceSquared(challengerLoc) > (Duel.getDuelRadius() * Duel.getDuelRadius())
+                    || startingLoc.distanceSquared(defenderLoc) > (Duel.getDuelRadius() * Duel.getDuelRadius())) {
                 duel.endDuel(IDuel.DuelResult.FORFEIT);
-                duel.getChallenger().sendMessage(ChatColor.RED + "You left the duel area and forfeited the duel!");
-            } else if (startingLoc.distanceSquared(defenderLoc) > (DUEL_RADIUS * DUEL_RADIUS)) {
-                duel.endDuel(IDuel.DuelResult.FORFEIT);
-                duel.getDefender().sendMessage(ChatColor.RED + "You left the duel area and forfeited the duel!");
             }
         }
     }
