@@ -1,12 +1,15 @@
 package com.runicrealms.plugin.duel;
 
 import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.cmd.CMDDuel;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class Duel implements IDuel {
 
+    private static final String DUEL_PREFIX = CMDDuel.getDuelPrefix();
     private static final int DUEL_RADIUS = 30; // max blocks players can leave from starting position before forfeiting
     private final Player challenger;
     private final Player defender;
@@ -48,16 +51,32 @@ public class Duel implements IDuel {
     public void endDuel(DuelResult duelResult) {
         if (duelResult == DuelResult.VICTORY) {
             // challenger won
+            challenger.sendMessage("You won");
+            challenger.playSound(challenger.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+            defender.sendMessage("You lost");
         } else if (duelResult == DuelResult.DEFEAT) {
             // challenger lost
+            defender.sendMessage("You won");
+            defender.playSound(defender.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+            challenger.sendMessage("You lost");
         } else {
             // forfeit
             if (duelLocation.distanceSquared(challenger.getLocation()) > (DUEL_RADIUS * DUEL_RADIUS)) {
-                endDuel(IDuel.DuelResult.FORFEIT);
-                challenger.sendMessage(ChatColor.RED + "You left the duel area and forfeited the duel!");
+                challenger.sendMessage(DUEL_PREFIX + ChatColor.RED + "You left the duel area and forfeited the duel!");
+                defender.sendMessage
+                        (
+                                DUEL_PREFIX + ChatColor.WHITE + challenger.getName() +
+                                ChatColor.RED + " left the duel area and forfeited the duel!"
+                        );
+                defender.playSound(defender.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
             } else if (duelLocation.distanceSquared(defender.getLocation()) > (DUEL_RADIUS * DUEL_RADIUS)) {
-                endDuel(IDuel.DuelResult.FORFEIT);
-                defender.sendMessage(ChatColor.RED + "You left the duel area and forfeited the duel!");
+                defender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You left the duel area and forfeited the duel!");
+                challenger.sendMessage
+                        (
+                                DUEL_PREFIX + ChatColor.WHITE + defender.getName() +
+                                ChatColor.RED + " left the duel area and forfeited the duel!"
+                        );
+                challenger.playSound(challenger.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
             }
         }
         RunicPvP.getDuelManager().getCurrentDuels().remove(this);

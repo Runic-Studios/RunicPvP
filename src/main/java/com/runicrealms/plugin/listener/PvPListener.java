@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 // TODO: safe zone listener?
-public class OutlawListener implements Listener {
+public class PvPListener implements Listener {
 
     @EventHandler
     public void onSpellDamage(SpellDamageEvent e) {

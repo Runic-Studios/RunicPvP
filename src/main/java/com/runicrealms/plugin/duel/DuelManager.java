@@ -63,10 +63,25 @@ public class DuelManager implements Listener {
     public HashSet<DuelRequest> getDuelRequests() {
         return duelRequests;
     }
+    public DuelRequest getDuelRequest(Player recipient) {
+        DuelRequest duelRequest = null;
+        for (DuelRequest request : RunicPvP.getDuelManager().getDuelRequests()) {
+            if (request.getRecipient().equals(recipient))
+                duelRequest = request;
+        }
+        return duelRequest;
+    }
     public HashSet<Duel> getCurrentDuels() {
         return currentDuels;
     }
-    public boolean areDueling(Player challenger, Player defender) {
-        return currentDuels.stream().anyMatch(n -> n.getChallenger() == challenger && n.getDefender() == defender);
+    public boolean areDueling(Player damager, Player victim) {
+        for (Duel duel : currentDuels) {
+            if (duel.getChallenger().equals(damager) && duel.getDefender().equals(victim)) {
+                return true;
+            } else if (duel.getDefender().equals(damager) && duel.getChallenger().equals(victim)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

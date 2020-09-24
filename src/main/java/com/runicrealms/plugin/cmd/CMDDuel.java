@@ -3,94 +3,63 @@ package com.runicrealms.plugin.cmd;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.duel.Duel;
 import com.runicrealms.plugin.duel.DuelRequest;
 import com.runicrealms.plugin.duel.IDuelRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.stream.Stream;
-
-@CommandAlias("party")
+@CommandAlias("duel")
 public class CMDDuel extends BaseCommand {
 
-    private static final String DUEL_PREFIX = ChatColor.RED + "[Duel] " + ChatColor.GOLD + "»";
-
-    public CMDDuel() {
-//        RunicCore.getCommandManager().getCommandCompletions().registerAsyncCompletion("party-invite", context -> {
-//            if (RunicCore.getPartyManager().getPlayerParty(context.getPlayer()) == null) return new ArrayList<>();
-//            if (RunicCore.getPartyManager().getPlayerParty(context.getPlayer()).getLeader() != context.getPlayer()) return new ArrayList<>();
-//            Set<String> players = new HashSet<>();
-//            for (Player player : Bukkit.getOnlinePlayers()) {
-//                if (RunicCore.getPartyManager().getPlayerParty(player) == null) {
-//                    players.add(player.getName());
-//                }
-//            }
-//            return players;
-//        });
-//        RunicCore.getCommandManager().getCommandCompletions().registerAsyncCompletion("party-join", context -> {
-//            if (RunicCore.getPartyManager().getPlayerParty(context.getPlayer()) != null) return new ArrayList<>();
-//            Set<String> invites = new HashSet<>();
-//            for (Party party : RunicCore.getPartyManager().getParties()) {
-//                for (Party.Invite invite : party.getInvites()) {
-//                    if (invite.getPlayer() == context.getPlayer()) {
-//                        invites.add(party.getLeader().getName());
-//                    }
-//                }
-//            }
-//            return invites;
-//        });
-//        RunicCore.getCommandManager().getCommandCompletions().registerAsyncCompletion("party-kick", context -> {
-//            if (RunicCore.getPartyManager().getPlayerParty(context.getPlayer()) == null) return new ArrayList<>();
-//            if (RunicCore.getPartyManager().getPlayerParty(context.getPlayer()).getLeader() != context.getPlayer()) return new ArrayList<>();
-//            Set<String> members = new HashSet<>();
-//            RunicCore.getPartyManager().getPlayerParty(context.getPlayer()).getMembers().forEach(member -> members.add(member.getName()));
-//            return members;
-//        });
-    }
+    private static final String DUEL_PREFIX = ChatColor.RED + "[Duel] " + ChatColor.GOLD + "» ";
 
     @Default
     @Syntax("<player>")
-    @CommandCompletion("@online")
+    @CommandCompletion("@players")
     public static void onCommandDuel(Player sender, @Default("Unknown User") String targetName) {
+        for (DuelRequest duelRequest : RunicPvP.getDuelManager().getDuelRequests()) {
+            if (duelRequest.getSender().equals(sender)) {
+                sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You already have an outstanding challenge!");
+                return;
+            }
+        }
         if(targetName.isEmpty()) {
-            sender.sendMessage(ChatColor.RED + "Player not found!");
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "Player not found!");
             return;
         }
-
         Player target = Bukkit.getPlayer(targetName);
-
         if(target == null) {
-            sender.sendMessage(ChatColor.RED + "Player not found!");
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "Player not found!");
             return;
         }
-
+        if(target.equals(sender)) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot challenge yourself!");
+            return;
+        }
+        if (RunicPvP.getDuelManager().getDuelRequest(target) != null) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "This player already has an outstanding challenge!");
+            return;
+        }
+        for (DuelRequest duelRequest : RunicPvP.getDuelManager().getDuelRequests()) {
+            if (duelRequest.getSender().equals(target)) {
+                sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "This player already has an outstanding challenge!");
+                return;
+            }
+        }
+        if (target.getLocation().distanceSquared(sender.getLocation()) > Duel.getDuelRadius() * Duel.getDuelRadius()) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "This player is too far away!");
+            return;
+        }
         DuelRequest duelRequest = new DuelRequest(sender, Bukkit.getPlayer(targetName));
         RunicPvP.getDuelManager().getDuelRequests().add(duelRequest);
     }
 
-//    @Default
-//    @CatchUnknown
-//    @Subcommand("help|h")
-//    public void onCommandHelp(Player player) {
-//        player.sendMessage(ChatColor.translateAlternateColorCodes('&', DUEL_PREFIX + " &aAvailable commands: &eaccept, deny"));
-//    }
-
-//    @Subcommand("challenge|request|c|r")
-//    @Syntax("<player>")
-//    @CommandCompletion("@duel-challenge")
-//    @Conditions("is-player")
-//    public void onCommandInvite(Player player, String[] args) {
-//
-//    }
-
     @Subcommand("accept|a")
     @Conditions("is-player")
     public void onCommandAccept(Player player) {
-        Stream<DuelRequest> requests = RunicPvP.getDuelManager().getDuelRequests().stream();
-        DuelRequest duelRequest = null;
-        if (requests.findFirst().filter(n -> n.getRecipient().equals(player)).isPresent())
-            duelRequest = requests.findFirst().filter(n -> n.getRecipient().equals(player)).get();
+        DuelRequest duelRequest = RunicPvP.getDuelManager().getDuelRequest(player);
         if (duelRequest != null)
             duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.ACCEPTED);
         else
@@ -100,6 +69,14 @@ public class CMDDuel extends BaseCommand {
     @Subcommand("deny|d|reject|cancel")
     @Conditions("is-player")
     public void onCommandDeny(Player player) {
+        DuelRequest duelRequest = RunicPvP.getDuelManager().getDuelRequest(player);
+        if (duelRequest != null)
+            duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.DENIED);
+        else
+            player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You have no outstanding duel challenges!");
+    }
 
+    public static String getDuelPrefix() {
+        return DUEL_PREFIX;
     }
 }
