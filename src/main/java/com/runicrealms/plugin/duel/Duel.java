@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class Duel implements IDuel {
 
     private static final String DUEL_PREFIX = CMDDuel.getDuelPrefix();
-    private static final int DUEL_RADIUS = 30; // max blocks players can leave from starting position before forfeiting
+    private static final int DUEL_RADIUS = 50; // max blocks players can leave from starting position before forfeiting
     private final Player challenger;
     private final Player defender;
     private final Location duelLocation;
@@ -51,14 +51,10 @@ public class Duel implements IDuel {
     public void endDuel(DuelResult duelResult) {
         if (duelResult == DuelResult.VICTORY) {
             // challenger won
-            challenger.sendMessage("You won");
-            challenger.playSound(challenger.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-            defender.sendMessage("You lost");
+            sendEndMssg(challenger, defender);
         } else if (duelResult == DuelResult.DEFEAT) {
             // challenger lost
-            defender.sendMessage("You won");
-            defender.playSound(defender.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-            challenger.sendMessage("You lost");
+            sendEndMssg(defender, challenger);
         } else {
             // forfeit
             if (duelLocation.distanceSquared(challenger.getLocation()) > (DUEL_RADIUS * DUEL_RADIUS)) {
@@ -80,6 +76,21 @@ public class Duel implements IDuel {
             }
         }
         RunicPvP.getDuelManager().getCurrentDuels().remove(this);
+    }
+
+    private void sendEndMssg(Player winner, Player loser) {
+        winner.sendMessage
+                (
+                        DUEL_PREFIX + "You won your duel against " +
+                        ChatColor.WHITE + loser.getName() + ChatColor.RED + "!"
+                );
+        winner.playSound(winner.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+        winner.playSound(loser.getLocation(), Sound.ENTITY_PLAYER_DEATH, 0.5f, 1.0f);
+        loser.sendMessage
+                (
+                        DUEL_PREFIX + "You lost your duel against " +
+                        ChatColor.WHITE + winner.getName() + ChatColor.RED + "!"
+                );
     }
 
     public static int getDuelRadius() {
