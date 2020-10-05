@@ -51,10 +51,10 @@ public class Duel implements IDuel {
     public void endDuel(DuelResult duelResult) {
         if (duelResult == DuelResult.VICTORY) {
             // challenger won
-            sendEndMssg(challenger, defender);
+            endMessage(challenger, defender);
         } else if (duelResult == DuelResult.DEFEAT) {
             // challenger lost
-            sendEndMssg(defender, challenger);
+            endMessage(defender, challenger);
         } else {
             // forfeit
             if (duelLocation.distanceSquared(challenger.getLocation()) > (DUEL_RADIUS * DUEL_RADIUS)) {
@@ -78,7 +78,7 @@ public class Duel implements IDuel {
         RunicPvP.getDuelManager().getCurrentDuels().remove(this);
     }
 
-    private void sendEndMssg(Player winner, Player loser) {
+    private void endMessage(Player winner, Player loser) {
         winner.sendMessage
                 (
                         DUEL_PREFIX + "You won your duel against " +
