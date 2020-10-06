@@ -4,6 +4,7 @@ import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.PaperCommandManager;
 import com.runicrealms.plugin.cmd.CMDDuel;
 import com.runicrealms.plugin.cmd.CMDOutlaw;
+import com.runicrealms.plugin.conquest.ConquestManager;
 import com.runicrealms.plugin.duel.DuelManager;
 import com.runicrealms.plugin.listener.PvPListener;
 import com.runicrealms.plugin.manager.BoardManager;
@@ -17,6 +18,7 @@ public final class RunicPvP extends JavaPlugin {
 
     private static Plugin plugin;
     private static BoardManager boardManager;
+    private static ConquestManager conquestManager;
     private static DuelManager duelManager;
     private static OutlawManager outlawManager;
     private static PaperCommandManager commandManager;
@@ -25,10 +27,11 @@ public final class RunicPvP extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         boardManager = new BoardManager();
+        conquestManager = new ConquestManager();
         duelManager = new DuelManager();
         outlawManager = new OutlawManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PvPListener(), this);
-        getCommand("outlaw").setExecutor(new CMDOutlaw());
+        getCommand("outlaw").setExecutor(new CMDOutlaw()); // todo: to acf
         commandManager = new PaperCommandManager(this);
         commandManager.registerCommand(new CMDDuel());
         commandManager.getCommandConditions().addCondition("is-player", context -> {
@@ -43,6 +46,7 @@ public final class RunicPvP extends JavaPlugin {
     public void onDisable() {
         plugin = null;
         boardManager = null;
+        conquestManager = null;
         duelManager = null;
         outlawManager = null;
         commandManager = null;
@@ -53,6 +57,9 @@ public final class RunicPvP extends JavaPlugin {
     }
     public static BoardManager getBoardManager() {
         return boardManager;
+    }
+    public static ConquestManager getConquestManager() {
+        return conquestManager;
     }
     public static DuelManager getDuelManager() {
         return duelManager;
