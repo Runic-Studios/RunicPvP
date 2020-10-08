@@ -41,4 +41,16 @@ public enum ConquestEnum {
     static LootChest lootChest2() {
         return null;
     }
+
+    public CapturePoint getCapturePoint() {
+        return capturePoint;
+    }
+
+    public MythicMob getMythicMob() {
+        return mythicMob;
+    }
+
+    public LootChest getLootChest() {
+        return lootChest;
+    }
 }

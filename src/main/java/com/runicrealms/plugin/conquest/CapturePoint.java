@@ -48,11 +48,11 @@ public class CapturePoint implements ICapturePoint {
 
     @Override
     public void tickPoint() {
-
+        // todo: grab all parties in radius, then associate party w/ value. if more than one, say 'contested' and print nothing
     }
 
     @Override
     public void captureThePoint() {
-
+        // todo: firework, print message 'its over!'
     }
 }
