@@ -39,7 +39,7 @@ public class ConquestManager {
      */
     private Conquest activateConquest() {
         Random rand = new Random();
-        ConquestEnum conquestEnum = ConquestEnum.values()[rand.nextInt(1)];
+        ConquestEnum conquestEnum = ConquestEnum.values()[rand.nextInt(2)]; // inclusive, exclusive
         return new Conquest(conquestEnum.getCapturePoint(), conquestEnum.getMythicMob(), conquestEnum.getLootChest());
     }
 
