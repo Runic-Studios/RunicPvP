@@ -20,12 +20,12 @@ public class ConquestManager {
     public ConquestManager() {
 
         // announce (30, 15, 5) min ahead
-        beginSpawnTask();
-
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(RunicPvP.inst(), () -> {
-            activeConquest = activateConquest();
-            beginLocationCheck();
-        }, CONQUEST_SPAWN_TIME);
+//        beginSpawnTask();
+//
+//        Bukkit.getScheduler().scheduleAsyncDelayedTask(RunicPvP.inst(), () -> {
+//            activeConquest = activateConquest();
+//            beginLocationCheck();
+//        }, CONQUEST_SPAWN_TIME);
     }
 
     /**

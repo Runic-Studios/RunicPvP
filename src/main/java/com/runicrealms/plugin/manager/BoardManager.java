@@ -14,13 +14,26 @@ public class BoardManager {
 
     private static final String BOARD_TITLE = ChatColor.RED + "" + ChatColor.BOLD + "Wanted Outlaws";
 
+    /**
+     *
+     */
     public BoardManager() {
-        Location loc = new Location(Bukkit.getWorld("Alterra"), -12.5, 34.5, -550.5);
-        Hologram hologram = HologramsAPI.createHologram(RunicPvP.inst(), loc);
-        hologram.getVisibilityManager().setVisibleByDefault(true);
-        hologram.appendTextLine(BOARD_TITLE);
+        // azana
+        Location locAzana = new Location(Bukkit.getWorld("Alterra"), -760.5, 38.5, 121.5);
+        Hologram azanaHologram = HologramsAPI.createHologram(RunicPvP.inst(), locAzana);
+        azanaHologram.getVisibilityManager().setVisibleByDefault(true);
+        azanaHologram.appendTextLine(BOARD_TITLE);
+        // dmr
+        Location locDMR = new Location(Bukkit.getWorld("Alterra"), -12.5, 34.5, -550.5);
+        Hologram deadMansHologram = HologramsAPI.createHologram(RunicPvP.inst(), locDMR);
+        deadMansHologram.getVisibilityManager().setVisibleByDefault(true);
+        deadMansHologram.appendTextLine(BOARD_TITLE);
+        // task
         Bukkit.getScheduler().scheduleSyncRepeatingTask(RunicPvP.inst(),
-                () -> refreshBoard(hologram), 0, 5 * 20L);
+                () -> {
+                    refreshBoard(azanaHologram);
+                    refreshBoard(deadMansHologram);
+                }, 0, 5 * 20L);
     }
 
     private void refreshBoard(Hologram hologram) {
