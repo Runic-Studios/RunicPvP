@@ -3,8 +3,8 @@ package com.runicrealms.plugin.cmd;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.duel.Duel;
-import com.runicrealms.plugin.duel.DuelManager;
 import com.runicrealms.plugin.duel.DuelRequest;
 import com.runicrealms.plugin.duel.IDuelRequest;
 import org.bukkit.Bukkit;
@@ -20,6 +20,10 @@ public class CMDDuel extends BaseCommand {
     @Syntax("<player>")
     @CommandCompletion("@players")
     public static void onCommandDuel(Player sender, @Default("Unknown User") String targetName) {
+        if (RunicCoreAPI.isInCombat(sender)) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in combat!");
+            return;
+        }
         for (DuelRequest duelRequest : RunicPvP.getDuelManager().getDuelRequests()) {
             if (duelRequest.getSender().equals(sender)) {
                 sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You already have an outstanding challenge!");
@@ -33,6 +37,10 @@ public class CMDDuel extends BaseCommand {
         Player target = Bukkit.getPlayer(targetName);
         if(target == null) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "Player not found!");
+            return;
+        }
+        if (RunicCoreAPI.isInCombat(target)) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "That player is in combat!");
             return;
         }
         if (RunicPvP.getDuelManager().isInDuel(sender)) {

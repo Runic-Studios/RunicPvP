@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.duel;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.cmd.CMDDuel;
 import org.bukkit.ChatColor;
@@ -121,6 +122,14 @@ public class DuelRequest implements IDuelRequest {
                     Duel duel = new Duel(challenger, defender);
                     RunicPvP.getDuelManager().getCurrentDuels().add(duel);
                     this.cancel();
+                    if (!RunicCore.getCacheManager().getLoadedPlayers().contains(challenger)) { // challenger quits
+                        duel.setDuelResult(IDuel.DuelResult.DEFEAT);
+                        duel.endDuel(duel.getDuelResult());
+                    }
+                    if (!RunicCore.getCacheManager().getLoadedPlayers().contains(defender)) { // defender quits
+                        duel.setDuelResult(IDuel.DuelResult.VICTORY);
+                        duel.endDuel(duel.getDuelResult());
+                    }
                     return;
                 }
                 challenger.sendTitle

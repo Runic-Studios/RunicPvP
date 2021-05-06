@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.duel;
 
 import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.character.api.CharacterQuitEvent;
 import com.runicrealms.plugin.events.RunicDeathEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -24,6 +25,22 @@ public class DuelManager implements Listener {
         RunicPvP.inst().getServer().getPluginManager().registerEvents(this, RunicPvP.inst());
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::tryRequestTimeout, 0, 20L);
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::checkDuelRadius, 0, 20L);
+    }
+
+    /*
+
+     */
+    @EventHandler
+    public void onQuit(CharacterQuitEvent e) {
+        for (Duel duel : getCurrentDuels()) {
+            if (e.getPlayer().equals(duel.getChallenger()) || e.getPlayer().equals(duel.getDefender())) {
+                if (e.getPlayer() == duel.getChallenger())
+                    duel.setDuelResult(IDuel.DuelResult.DEFEAT);
+                else
+                    duel.setDuelResult(IDuel.DuelResult.VICTORY);
+                duel.endDuel(duel.getDuelResult());
+            }
+        }
     }
 
     /*
