@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("deprecation")
 public class DuelManager implements Listener {
@@ -26,7 +28,7 @@ public class DuelManager implements Listener {
 
     @EventHandler
     public void onRunicDeath(RunicDeathEvent e) {
-        for (Duel duel : currentDuels) {
+        for (Duel duel : getCurrentDuels()) {
             if ((e.getKiller().equals(duel.getChallenger()) || e.getKiller().equals(duel.getDefender())
                     && (e.getVictim().equals(duel.getChallenger()) || e.getVictim().equals(duel.getDefender())))) {
                 e.setCancelled(true);
@@ -55,7 +57,7 @@ public class DuelManager implements Listener {
 
      */
     private void checkDuelRadius() {
-        for (Duel duel : currentDuels) {
+        for (Duel duel : getCurrentDuels()) {
             Location startingLoc = duel.getDuelLocation();
             Location challengerLoc = duel.getChallenger().getLocation();
             Location defenderLoc = duel.getDefender().getLocation();
@@ -79,8 +81,8 @@ public class DuelManager implements Listener {
         return duelRequest;
     }
 
-    public HashSet<Duel> getCurrentDuels() {
-        return currentDuels;
+    public Set<Duel> getCurrentDuels() {
+        return Collections.synchronizedSet(currentDuels);
     }
 
     /**
@@ -89,7 +91,7 @@ public class DuelManager implements Listener {
      * @return
      */
     public boolean isInDuel(Player player) {
-        for (Duel duel : currentDuels) {
+        for (Duel duel : getCurrentDuels()) {
             if (duel.getChallenger().equals(player) || duel.getDefender().equals(player))
                 return true;
         }
@@ -103,7 +105,7 @@ public class DuelManager implements Listener {
      * @return
      */
     public boolean areDueling(Player damager, Player victim) {
-        for (Duel duel : currentDuels) {
+        for (Duel duel : getCurrentDuels()) {
             if (duel.getChallenger().equals(damager) && duel.getDefender().equals(victim)) {
                 return true;
             } else if (duel.getDefender().equals(damager) && duel.getChallenger().equals(victim)) {

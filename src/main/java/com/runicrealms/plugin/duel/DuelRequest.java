@@ -103,8 +103,8 @@ public class DuelRequest implements IDuelRequest {
                             ChatColor.WHITE + sender.getName() +
                             ChatColor.GRAY + " has expired."
                     );
+            RunicPvP.getDuelManager().getDuelRequests().remove(this);
         }
-        RunicPvP.getDuelManager().getDuelRequests().remove(this);
     }
 
     @Override
@@ -115,9 +115,12 @@ public class DuelRequest implements IDuelRequest {
             @Override
             public void run() {
                 if (count >= Duel.getCountdown()) {
+                    challenger.sendTitle(ChatColor.DARK_RED + "Fight!", "", 10, 40, 10);
+                    defender.sendTitle(ChatColor.DARK_RED + "Fight!", "", 10, 40, 10);
                     RunicPvP.getDuelManager().getDuelRequests().remove(request);
                     Duel duel = new Duel(challenger, defender);
                     RunicPvP.getDuelManager().getCurrentDuels().add(duel);
+                    this.cancel();
                     return;
                 }
                 challenger.sendTitle
