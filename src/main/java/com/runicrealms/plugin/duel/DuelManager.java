@@ -26,16 +26,18 @@ public class DuelManager implements Listener {
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::checkDuelRadius, 0, 20L);
     }
 
+    /*
+
+     */
     @EventHandler
     public void onRunicDeath(RunicDeathEvent e) {
         for (Duel duel : getCurrentDuels()) {
-            if ((e.getKiller().equals(duel.getChallenger()) || e.getKiller().equals(duel.getDefender())
-                    && (e.getVictim().equals(duel.getChallenger()) || e.getVictim().equals(duel.getDefender())))) {
+            if (e.getVictim().equals(duel.getChallenger()) || e.getVictim().equals(duel.getDefender())) {
                 e.setCancelled(true);
-                if (e.getKiller() == duel.getChallenger())
-                    duel.setDuelResult(IDuel.DuelResult.VICTORY);
-                else
+                if (e.getVictim() == duel.getChallenger())
                     duel.setDuelResult(IDuel.DuelResult.DEFEAT);
+                else
+                    duel.setDuelResult(IDuel.DuelResult.VICTORY);
                 duel.endDuel(duel.getDuelResult());
             }
         }
