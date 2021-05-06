@@ -4,22 +4,31 @@ import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.cmd.CMDDuel;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class DuelRequest implements IDuelRequest {
 
     private static final String DUEL_PREFIX = CMDDuel.getDuelPrefix();
     private static final long REQUEST_TIMEOUT = 20; // how long does a duel request last
+
+    private boolean countdownStarted;
     private final long requestTime;
     private final Player sender;
     private final Player recipient;
     private final DuelRequestResult duelRequestResult;
 
     public DuelRequest(Player sender, Player recipient) {
+        this.countdownStarted = false;
         this.requestTime = System.currentTimeMillis(); // used for timeout checks
         this.sender = sender;
         this.recipient = recipient;
         this.duelRequestResult = DuelRequestResult.SENT;
         processDuelRequest(duelRequestResult);
+    }
+
+    @Override
+    public boolean countdownStarted() {
+        return countdownStarted;
     }
 
     @Override
@@ -68,9 +77,8 @@ public class DuelRequest implements IDuelRequest {
                             ChatColor.GREEN + " has accepted your duel request!"
                     );
             recipient.sendMessage(DUEL_PREFIX + ChatColor.GREEN + "Duel accepted!");
-            RunicPvP.getDuelManager().getDuelRequests().remove(this);
-            Duel duel = new Duel(sender, recipient);
-            RunicPvP.getDuelManager().getCurrentDuels().add(duel);
+            this.countdownStarted = true; // prevent request from expiring
+            beginCountdown(sender, recipient);
 
         } else if (duelRequestResult == DuelRequestResult.DENIED) {
             sender.sendMessage
@@ -97,6 +105,34 @@ public class DuelRequest implements IDuelRequest {
                     );
         }
         RunicPvP.getDuelManager().getDuelRequests().remove(this);
+    }
+
+    @Override
+    public void beginCountdown(Player challenger, Player defender) {
+        DuelRequest request = this;
+        new BukkitRunnable() {
+            int count = 0;
+            @Override
+            public void run() {
+                if (count >= Duel.getCountdown()) {
+                    RunicPvP.getDuelManager().getDuelRequests().remove(request);
+                    Duel duel = new Duel(challenger, defender);
+                    RunicPvP.getDuelManager().getCurrentDuels().add(duel);
+                    return;
+                }
+                challenger.sendTitle
+                        (
+                                ChatColor.RED + "Duel beginning in ",
+                                ChatColor.YELLOW + "" + (Duel.getCountdown() - count), 10, 40, 10
+                        );
+                defender.sendTitle
+                        (
+                                ChatColor.RED + "Duel beginning in ",
+                                ChatColor.YELLOW + "" + (Duel.getCountdown() - count), 10, 40, 10
+                        );
+                count++;
+            }
+        }.runTaskTimerAsynchronously(RunicPvP.inst(), 0, 20L);
     }
 
     public static long getRequestTimeout() {

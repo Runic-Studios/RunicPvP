@@ -39,15 +39,21 @@ public class DuelManager implements Listener {
         }
     }
 
+    /*
+
+     */
     private void tryRequestTimeout() {
         for (DuelRequest duelRequest : duelRequests) {
             long startTime = duelRequest.getRequestTime();
-            if (System.currentTimeMillis() - startTime > (DuelRequest.getRequestTimeout() * 1000)) {
+            if (!duelRequest.countdownStarted() && System.currentTimeMillis() - startTime > (DuelRequest.getRequestTimeout() * 1000)) {
                 duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.TIMEOUT);
             }
         }
     }
 
+    /*
+
+     */
     private void checkDuelRadius() {
         for (Duel duel : currentDuels) {
             Location startingLoc = duel.getDuelLocation();
@@ -63,6 +69,7 @@ public class DuelManager implements Listener {
     public HashSet<DuelRequest> getDuelRequests() {
         return duelRequests;
     }
+
     public DuelRequest getDuelRequest(Player recipient) {
         DuelRequest duelRequest = null;
         for (DuelRequest request : RunicPvP.getDuelManager().getDuelRequests()) {
@@ -71,9 +78,30 @@ public class DuelManager implements Listener {
         }
         return duelRequest;
     }
+
     public HashSet<Duel> getCurrentDuels() {
         return currentDuels;
     }
+
+    /**
+     *
+     * @param player
+     * @return
+     */
+    public boolean isInDuel(Player player) {
+        for (Duel duel : currentDuels) {
+            if (duel.getChallenger().equals(player) || duel.getDefender().equals(player))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param damager
+     * @param victim
+     * @return
+     */
     public boolean areDueling(Player damager, Player victim) {
         for (Duel duel : currentDuels) {
             if (duel.getChallenger().equals(damager) && duel.getDefender().equals(victim)) {

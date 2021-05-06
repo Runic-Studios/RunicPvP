@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 public class Duel implements IDuel {
 
+    private static final int COUNTDOWN = 10;
     private static final String DUEL_PREFIX = CMDDuel.getDuelPrefix();
     private static final int DUEL_RADIUS = 50; // max blocks players can leave from starting position before forfeiting
     private final Player challenger;
@@ -91,6 +92,10 @@ public class Duel implements IDuel {
                         DUEL_PREFIX + "You lost your duel against " +
                         ChatColor.WHITE + winner.getName() + ChatColor.RED + "!"
                 );
+    }
+
+    public static int getCountdown() {
+        return COUNTDOWN;
     }
 
     public static int getDuelRadius() {

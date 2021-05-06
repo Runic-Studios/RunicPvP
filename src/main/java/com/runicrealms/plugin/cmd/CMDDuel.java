@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.duel.Duel;
+import com.runicrealms.plugin.duel.DuelManager;
 import com.runicrealms.plugin.duel.DuelRequest;
 import com.runicrealms.plugin.duel.IDuelRequest;
 import org.bukkit.Bukkit;
@@ -32,6 +33,14 @@ public class CMDDuel extends BaseCommand {
         Player target = Bukkit.getPlayer(targetName);
         if(target == null) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "Player not found!");
+            return;
+        }
+        if (RunicPvP.getDuelManager().isInDuel(sender)) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a challenge while in a duel!");
+            return;
+        }
+        if (RunicPvP.getDuelManager().isInDuel(target)) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "That player is already in a duel!");
             return;
         }
         if(target.equals(sender)) {

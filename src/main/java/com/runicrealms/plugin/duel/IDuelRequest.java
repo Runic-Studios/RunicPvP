@@ -11,6 +11,7 @@ public interface IDuelRequest {
         TIMEOUT
     }
 
+    boolean countdownStarted();
     long getRequestTime();
     Player getSender();
     Player getRecipient();
@@ -19,6 +20,7 @@ public interface IDuelRequest {
     /*
     ???
      */
+    void beginCountdown(Player challenger, Player defender);
     void processDuelRequest(DuelRequestResult duelRequestResult);
 
 }
