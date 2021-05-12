@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.Collections;
@@ -46,7 +47,7 @@ public class DuelManager implements Listener {
     /*
 
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onRunicDeath(RunicDeathEvent e) {
         for (Duel duel : getCurrentDuels()) {
             if (e.getVictim().equals(duel.getChallenger()) || e.getVictim().equals(duel.getDefender())) {

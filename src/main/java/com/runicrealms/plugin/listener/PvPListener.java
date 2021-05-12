@@ -10,6 +10,7 @@ import com.runicrealms.plugin.events.WeaponDamageEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 // TODO: safe zone listener?
@@ -50,13 +51,14 @@ public class PvPListener implements Listener {
                 || RunicPvP.getDuelManager().areDueling(damager, (Player) victim);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onRunicDeath(RunicDeathEvent e) {
         if (e.getKiller() == null) return;
         if (!(e.getKiller() instanceof Player)) return;
         Player killer = (Player) e.getKiller();
         if (!RunicPvPAPI.isOutlaw((killer)) || !RunicPvPAPI.isOutlaw(e.getVictim())) return;
         if (RunicPvP.getDuelManager().areDueling(killer, e.getVictim())) return; // todo: outlaw code still fires. just delay it... or check if areDueling is still true on the death event
+        if (e.isCancelled()) return;
         RunicPvP.getOutlawManager().onKill(killer, e.getVictim());
     }
 }
