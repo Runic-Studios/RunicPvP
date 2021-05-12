@@ -7,7 +7,6 @@ import com.runicrealms.plugin.events.EnemyVerifyEvent;
 import com.runicrealms.plugin.events.RunicDeathEvent;
 import com.runicrealms.plugin.events.SpellDamageEvent;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,7 +29,7 @@ public class PvPListener implements Listener {
     @EventHandler
     public void onSpellDamage(SpellDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
-        if (isValidCombatTarget(e.getPlayer(), e.getEntity()))
+        if (RunicPvPAPI.isPlayerValidTarget(e.getPlayer(), e.getEntity()))
             RunicCoreAPI.tagCombat(e.getPlayer(), e.getEntity());
         else
             e.setCancelled(true);
@@ -39,16 +38,11 @@ public class PvPListener implements Listener {
     @EventHandler
     public void onWeaponDamage(WeaponDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
-        if (isValidCombatTarget(e.getPlayer(), e.getEntity()))
+        if (RunicPvPAPI.isPlayerValidTarget(e.getPlayer(), e.getEntity()))
             RunicCoreAPI.tagCombat(e.getPlayer(), e.getEntity());
         else
             e.setCancelled(true);
 
-    }
-
-    private boolean isValidCombatTarget(Player damager, Entity victim) {
-        return (RunicPvPAPI.isOutlaw(((Player) victim)) && RunicPvPAPI.isOutlaw((Player) victim))
-                || RunicPvP.getDuelManager().areDueling(damager, (Player) victim);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -57,7 +51,7 @@ public class PvPListener implements Listener {
         if (!(e.getKiller() instanceof Player)) return;
         Player killer = (Player) e.getKiller();
         if (!RunicPvPAPI.isOutlaw((killer)) || !RunicPvPAPI.isOutlaw(e.getVictim())) return;
-        if (RunicPvP.getDuelManager().areDueling(killer, e.getVictim())) return; // todo: outlaw code still fires. just delay it... or check if areDueling is still true on the death event
+        if (RunicPvP.getDuelManager().areDueling(killer, e.getVictim())) return;
         if (e.isCancelled()) return;
         RunicPvP.getOutlawManager().onKill(killer, e.getVictim());
     }
