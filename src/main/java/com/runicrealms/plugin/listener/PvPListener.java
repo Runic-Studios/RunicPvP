@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-// TODO: safe zone listener?
 public class PvPListener implements Listener {
 
     /*

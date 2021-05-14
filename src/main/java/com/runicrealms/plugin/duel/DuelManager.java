@@ -106,9 +106,9 @@ public class DuelManager implements Listener {
     }
 
     /**
-     *
-     * @param player
-     * @return
+     * Checks whether a single player is currently dueling.
+     * @param player player to check
+     * @return true if player is dueling
      */
     public boolean isInDuel(Player player) {
         for (Duel duel : getCurrentDuels()) {
@@ -119,10 +119,10 @@ public class DuelManager implements Listener {
     }
 
     /**
-     *
-     * @param damager
-     * @param victim
-     * @return
+     * Checks whether both players are dueling each other!
+     * @param damager player who is attacking
+     * @param victim player who is defending
+     * @return true if players are dueling each other
      */
     public boolean areDueling(Player damager, Player victim) {
         for (Duel duel : getCurrentDuels()) {

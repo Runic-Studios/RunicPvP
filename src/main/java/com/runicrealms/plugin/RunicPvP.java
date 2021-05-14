@@ -6,6 +6,7 @@ import com.runicrealms.plugin.cmd.CMDDuel;
 import com.runicrealms.plugin.cmd.CMDOutlaw;
 import com.runicrealms.plugin.conquest.ConquestManager;
 import com.runicrealms.plugin.duel.DuelManager;
+import com.runicrealms.plugin.listener.OutlawBonusListener;
 import com.runicrealms.plugin.listener.PvPListener;
 import com.runicrealms.plugin.manager.BoardManager;
 import com.runicrealms.plugin.manager.OutlawManager;
@@ -31,6 +32,7 @@ public final class RunicPvP extends JavaPlugin {
         duelManager = new DuelManager();
         outlawManager = new OutlawManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PvPListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new OutlawBonusListener(), this);
         getCommand("outlaw").setExecutor(new CMDOutlaw()); // todo: to acf
         commandManager = new PaperCommandManager(this);
         commandManager.registerCommand(new CMDDuel());

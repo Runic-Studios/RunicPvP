@@ -24,6 +24,10 @@ public class CMDDuel extends BaseCommand {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in combat!");
             return;
         }
+        if (RunicCoreAPI.isSafezone(sender.getLocation())) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in a safe zone!");
+            return;
+        }
         for (DuelRequest duelRequest : RunicPvP.getDuelManager().getDuelRequests()) {
             if (duelRequest.getSender().equals(sender)) {
                 sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You already have an outstanding challenge!");
@@ -77,9 +81,13 @@ public class CMDDuel extends BaseCommand {
     @Conditions("is-player")
     public void onCommandAccept(Player player) {
         DuelRequest duelRequest = RunicPvP.getDuelManager().getDuelRequest(player);
-        if (duelRequest != null)
+        if (duelRequest != null) {
+            if (RunicCoreAPI.isSafezone(player.getLocation())) {
+                player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot accept a duel request in a safe zone!");
+                return;
+            }
             duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.ACCEPTED);
-        else
+        } else
             player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You have no outstanding duel challenges!");
     }
 

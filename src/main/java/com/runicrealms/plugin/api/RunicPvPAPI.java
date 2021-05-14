@@ -17,7 +17,10 @@ public class RunicPvPAPI {
      * @return true if both players are dueling or are BOTH outlaws
      */
     public static boolean isPlayerValidTarget(Player damager, Entity victim) {
-        return (RunicPvPAPI.isOutlaw(damager) && RunicPvPAPI.isOutlaw((Player) victim))
-                || RunicPvP.getDuelManager().areDueling(damager, (Player) victim);
+        boolean bothOutlaws = RunicPvPAPI.isOutlaw(damager) && RunicPvPAPI.isOutlaw((Player) victim);
+        boolean areDueling = RunicPvP.getDuelManager().areDueling(damager, (Player) victim);
+        boolean damagerInSafezone = RunicCoreAPI.isSafezone(damager.getLocation());
+        boolean victimInSafezone = RunicCoreAPI.isSafezone(victim.getLocation());
+        return (bothOutlaws || areDueling) && (!damagerInSafezone && !victimInSafezone);
     }
 }
