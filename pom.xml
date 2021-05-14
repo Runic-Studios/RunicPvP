@@ -116,7 +116,15 @@
             <artifactId>RunicCore</artifactId>
             <version>1.15.2</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/RunicCore-1.16.4.jar</systemPath>
+            <systemPath>${project.basedir}/../lib/RunicCore-1.16.4.jar</systemPath>
+        </dependency>
+        <!-- RunicItems -->
+        <dependency>
+            <groupId>com.runicrealms.runicitems</groupId>
+            <artifactId>RunicItems</artifactId>
+            <version>1.16.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../lib/RunicItems-1.16.4.jar</systemPath>
         </dependency>
         <!-- RunicProfessions -->
         <dependency>

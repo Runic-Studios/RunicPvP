@@ -8,6 +8,3 @@ commands:
   duel:
     usage: /<commands>
     description: Base for all duel commands
-  outlaw:
-    usage: /<commands>
-    description: Change the outlaw status of a player

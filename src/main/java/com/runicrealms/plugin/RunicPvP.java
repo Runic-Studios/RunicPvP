@@ -3,13 +3,13 @@ package com.runicrealms.plugin;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.PaperCommandManager;
 import com.runicrealms.plugin.cmd.CMDDuel;
-import com.runicrealms.plugin.cmd.CMDOutlaw;
 import com.runicrealms.plugin.conquest.ConquestManager;
 import com.runicrealms.plugin.duel.DuelManager;
 import com.runicrealms.plugin.listener.OutlawBonusListener;
 import com.runicrealms.plugin.listener.PvPListener;
 import com.runicrealms.plugin.manager.BoardManager;
 import com.runicrealms.plugin.manager.OutlawManager;
+import com.runicrealms.plugin.shop.OutlawToggleShop;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -24,6 +24,9 @@ public final class RunicPvP extends JavaPlugin {
     private static OutlawManager outlawManager;
     private static PaperCommandManager commandManager;
 
+    // shops
+    private static OutlawToggleShop outlawToggleShop;
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -31,9 +34,10 @@ public final class RunicPvP extends JavaPlugin {
         conquestManager = new ConquestManager();
         duelManager = new DuelManager();
         outlawManager = new OutlawManager();
+        // shops
+        outlawToggleShop = new OutlawToggleShop();
         Bukkit.getServer().getPluginManager().registerEvents(new PvPListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new OutlawBonusListener(), this);
-        getCommand("outlaw").setExecutor(new CMDOutlaw()); // todo: to acf
         commandManager = new PaperCommandManager(this);
         commandManager.registerCommand(new CMDDuel());
         commandManager.getCommandConditions().addCondition("is-player", context -> {
@@ -52,6 +56,8 @@ public final class RunicPvP extends JavaPlugin {
         duelManager = null;
         outlawManager = null;
         commandManager = null;
+        // shops
+        outlawToggleShop = null;
     }
 
     public static Plugin inst() { // Get the plugin instance
@@ -71,5 +77,9 @@ public final class RunicPvP extends JavaPlugin {
     }
     public static PaperCommandManager getCommandManager() {
         return commandManager;
+    }
+    // getters for shops
+    public static OutlawToggleShop outlawToggleShop() {
+        return outlawToggleShop;
     }
 }
