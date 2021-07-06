@@ -12,6 +12,7 @@ import com.runicrealms.plugin.utilities.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -28,9 +29,10 @@ public class OutlawToggleShop implements RunicItemShop {
             try {
                 ItemStack toggleItem = new ItemStack(Material.STONE_SWORD);
                 ItemMeta meta = toggleItem.getItemMeta();
+                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                 meta.setLore(Collections.singletonList(""));
                 toggleItem.setItemMeta(meta);
-                RunicShopItem runicShopItem = new RunicShopItem(0, "coin", iconWithLore(toggleItem), runShopBuy());
+                RunicShopItem runicShopItem = new RunicShopItem(0, "Coin", iconWithLore(toggleItem), runShopBuy());
                 runicShopItem.setRemovePayment(false);
                 availableItems.put(4, runicShopItem);
             } catch (Exception e) {
