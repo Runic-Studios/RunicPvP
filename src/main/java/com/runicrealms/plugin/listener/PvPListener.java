@@ -27,18 +27,18 @@ public class PvPListener implements Listener {
 
     @EventHandler
     public void onSpellDamage(SpellDamageEvent e) {
-        if (!(e.getEntity() instanceof Player)) return;
-        if (RunicPvPAPI.isPlayerValidTarget(e.getPlayer(), e.getEntity()))
-            RunicCoreAPI.tagCombat(e.getPlayer(), e.getEntity());
+        if (!(e.getVictim() instanceof Player)) return;
+        if (RunicPvPAPI.isPlayerValidTarget(e.getPlayer(), e.getVictim()))
+            RunicCoreAPI.tagCombat(e.getPlayer(), e.getVictim());
         else
             e.setCancelled(true);
     }
 
     @EventHandler
     public void onWeaponDamage(WeaponDamageEvent e) {
-        if (!(e.getEntity() instanceof Player)) return;
-        if (RunicPvPAPI.isPlayerValidTarget(e.getPlayer(), e.getEntity()))
-            RunicCoreAPI.tagCombat(e.getPlayer(), e.getEntity());
+        if (!(e.getVictim() instanceof Player)) return;
+        if (RunicPvPAPI.isPlayerValidTarget(e.getPlayer(), e.getVictim()))
+            RunicCoreAPI.tagCombat(e.getPlayer(), e.getVictim());
         else
             e.setCancelled(true);
 
