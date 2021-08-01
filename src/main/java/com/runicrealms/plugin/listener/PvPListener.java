@@ -47,8 +47,8 @@ public class PvPListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRunicDeath(RunicDeathEvent e) {
         if (e.getKiller() == null) return;
-        if (!(e.getKiller() instanceof Player)) return;
-        Player killer = (Player) e.getKiller();
+        if (!(e.getKiller()[0] instanceof Player)) return;
+        Player killer = (Player) e.getKiller()[0];
         if (!RunicPvPAPI.isOutlaw((killer)) || !RunicPvPAPI.isOutlaw(e.getVictim())) return;
         if (RunicPvP.getDuelManager().areDueling(killer, e.getVictim())) return;
         if (e.isCancelled()) return;
