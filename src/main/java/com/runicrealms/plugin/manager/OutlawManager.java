@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("FieldCanBeLocal")
 public class OutlawManager {
 
-    private static final double PERCENT_BONUS = 0.20;
+    private static final double PERCENT_BONUS = 0.15; // exp and rep
 
     /**
      * Method to calculate rating changes for outlaw kills
