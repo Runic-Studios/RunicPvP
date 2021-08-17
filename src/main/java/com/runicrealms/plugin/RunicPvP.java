@@ -24,9 +24,6 @@ public final class RunicPvP extends JavaPlugin {
     private static OutlawManager outlawManager;
     private static PaperCommandManager commandManager;
 
-    // shops
-    private static OutlawToggleShop outlawToggleShop;
-
     @Override
     public void onEnable() {
         plugin = this;
@@ -34,8 +31,6 @@ public final class RunicPvP extends JavaPlugin {
         conquestManager = new ConquestManager();
         duelManager = new DuelManager();
         outlawManager = new OutlawManager();
-        // shops
-        outlawToggleShop = new OutlawToggleShop();
         Bukkit.getServer().getPluginManager().registerEvents(new PvPListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new OutlawBonusListener(), this);
         commandManager = new PaperCommandManager(this);
@@ -46,6 +41,10 @@ public final class RunicPvP extends JavaPlugin {
         commandManager.getCommandConditions().addCondition("is-op", context -> {
             if (!context.getIssuer().getIssuer().isOp()) throw new ConditionFailedException("You must be an operator to run this command!");
         });
+        /*
+        Shops
+         */
+        new OutlawToggleShop();
     }
 
     @Override
@@ -56,8 +55,6 @@ public final class RunicPvP extends JavaPlugin {
         duelManager = null;
         outlawManager = null;
         commandManager = null;
-        // shops
-        outlawToggleShop = null;
     }
 
     public static Plugin inst() { // Get the plugin instance
@@ -77,9 +74,5 @@ public final class RunicPvP extends JavaPlugin {
     }
     public static PaperCommandManager getCommandManager() {
         return commandManager;
-    }
-    // getters for shops
-    public static OutlawToggleShop outlawToggleShop() {
-        return outlawToggleShop;
     }
 }

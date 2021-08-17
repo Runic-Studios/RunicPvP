@@ -1,64 +1,33 @@
 package com.runicrealms.plugin.shop;
 
-import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.api.RunicPvPAPI;
 import com.runicrealms.plugin.item.shops.RunicItemRunnable;
-import com.runicrealms.plugin.item.shops.RunicItemShop;
+import com.runicrealms.plugin.item.shops.RunicShopGeneric;
 import com.runicrealms.plugin.item.shops.RunicShopItem;
 import com.runicrealms.plugin.manager.OutlawManager;
 import com.runicrealms.plugin.utilities.ChatUtils;
 import com.runicrealms.plugin.utilities.ColorUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class OutlawToggleShop implements RunicItemShop {
-
-    private static final int LOAD_DELAY = 10;
-    private final Map<Integer, RunicShopItem> availableItems;
+public class OutlawToggleShop {
 
     public OutlawToggleShop() {
-        availableItems = new HashMap<>();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(RunicPvP.inst(), () -> {
-            try {
-                ItemStack toggleItem = new ItemStack(Material.STONE_SWORD);
-                ItemMeta meta = toggleItem.getItemMeta();
-                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                meta.setLore(Collections.singletonList(""));
-                toggleItem.setItemMeta(meta);
-                RunicShopItem runicShopItem = new RunicShopItem(0, "Coin", iconWithLore(toggleItem), runShopBuy());
-                runicShopItem.setRemovePayment(false);
-                availableItems.put(4, runicShopItem);
-            } catch (Exception e) {
-                Bukkit.getLogger().info(ChatColor.DARK_RED + "Error: runic item template id not found!");
-                e.printStackTrace();
-            }
-            RunicCoreAPI.registerRunicItemShop(this);
-        }, LOAD_DELAY * 20L);
+        LinkedHashMap<ItemStack, RunicShopItem> shopItems = new LinkedHashMap<>();
+        shopItems.put(toggleOutlawIcon(), new RunicShopItem(0, "Coin", iconWithLore(toggleOutlawIcon()), runShopBuy()));
+        new RunicShopGeneric(9, ChatColor.YELLOW + "Head Outlaw Garrett", Arrays.asList(55, 56), shopItems);
     }
 
-    @Override
-    public Map<Integer, RunicShopItem> getContents() {
-        return availableItems;
+    private RunicItemRunnable runShopBuy() {
+        return RunicPvPAPI::toggleOutlaw;
     }
 
-    /**
-     * Size of the shop minus the title row
-     * @return size of shop minus title row (smallest size 9)
-     */
-    @Override
-    public int getShopSize() {
-        return 9;
-    }
-
-    @Override
-    public ItemStack getIcon() {
+    public ItemStack toggleOutlawIcon() {
         ItemStack vendorItem = new ItemStack(Material.SKELETON_SKULL);
         ItemMeta meta = vendorItem.getItemMeta();
         if (meta != null) {
@@ -67,24 +36,6 @@ public class OutlawToggleShop implements RunicItemShop {
             vendorItem.setItemMeta(meta);
         }
         return vendorItem;
-    }
-
-    /**
-     * From RunicNPCS
-     * @return ID of NPC in config
-     */
-    @Override
-    public Collection<Integer> getNpcIds() {
-        return Arrays.asList(55, 56);
-    }
-
-    @Override
-    public String getName() {
-        return ChatColor.YELLOW + "Head Outlaw Garrett";
-    }
-
-    private RunicItemRunnable runShopBuy() {
-        return RunicPvPAPI::toggleOutlaw;
     }
 
     private ItemStack iconWithLore(ItemStack is) {
