@@ -2,7 +2,7 @@ package com.runicrealms.plugin;
 
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.PaperCommandManager;
-import com.runicrealms.plugin.cmd.CMDDuel;
+import com.runicrealms.plugin.command.CMDDuel;
 import com.runicrealms.plugin.conquest.ConquestManager;
 import com.runicrealms.plugin.duel.DuelManager;
 import com.runicrealms.plugin.listener.OutlawBonusListener;

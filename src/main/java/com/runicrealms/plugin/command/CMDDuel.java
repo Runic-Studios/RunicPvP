@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.cmd;
+package com.runicrealms.plugin.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;

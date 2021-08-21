@@ -2,7 +2,7 @@ package com.runicrealms.plugin.duel;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
-import com.runicrealms.plugin.cmd.CMDDuel;
+import com.runicrealms.plugin.command.CMDDuel;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
