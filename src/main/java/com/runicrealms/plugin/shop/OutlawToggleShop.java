@@ -18,8 +18,8 @@ import java.util.*;
 public class OutlawToggleShop {
 
     public OutlawToggleShop() {
-        LinkedHashMap<ItemStack, RunicShopItem> shopItems = new LinkedHashMap<>();
-        shopItems.put(toggleOutlawIcon(), new RunicShopItem(0, "Coin", iconWithLore(toggleOutlawIcon()), runShopBuy()));
+        LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();
+        shopItems.add(new RunicShopItem(0, "Coin", iconWithLore(toggleOutlawIcon()), runShopBuy()));
         new RunicShopGeneric(9, ChatColor.YELLOW + "Head Outlaw Garrett", Arrays.asList(55, 56), shopItems);
     }
 
