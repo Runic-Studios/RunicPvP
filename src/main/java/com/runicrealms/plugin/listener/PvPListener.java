@@ -13,24 +13,30 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class PvPListener implements Listener {
 
-    private final Set<UUID> playersFightingPlayers = new HashSet<>();
+    private final Map<UUID, UUID> playersFightingPlayers = new HashMap<>();
 
     @EventHandler
     public void onPvPCombat(RunicPvPEvent e) {
-        EnterCombatEvent.tagPlayerAndPartyInCombat(e.getPlayer());
-        EnterCombatEvent.tagPlayerAndPartyInCombat(e.getVictim());
-        e.getPlayer().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat!");
-        e.getVictim().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat!");
-        playersFightingPlayers.add(e.getPlayer().getUniqueId());
-        playersFightingPlayers.add(e.getVictim().getUniqueId());
+        EnterCombatEvent.tagPlayerAndPartyInCombat(e.getVictim()); // player is tagged in parent event
+        if (!playersFightingPlayers.containsKey(e.getPlayer().getUniqueId())) {
+            e.getPlayer().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat!");
+        }
+        playersFightingPlayers.put(e.getPlayer().getUniqueId(), e.getVictim().getUniqueId()); // ALWAYS map our attacker to our victim
+        if (!playersFightingPlayers.containsKey(e.getVictim().getUniqueId())) {
+            e.getVictim().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat!");
+            playersFightingPlayers.put(e.getVictim().getUniqueId(), e.getPlayer().getUniqueId()); // CONDITIONALLY map our victim to our attacker
+        }
     }
-    // todo: create a leave combat event and remove players from set during that
+
+    @EventHandler
+    public void onLeaveCombat(LeaveCombatEvent e) {
+        playersFightingPlayers.remove(e.getPlayer().getUniqueId());
+        e.getPlayer().sendMessage(ChatColor.DARK_GREEN + "You have left PvP combat!");
+    }
 
     /*
     For spell effects like knock-up, blind, etc.
@@ -39,22 +45,22 @@ public class PvPListener implements Listener {
     public void onSpellVerify(EnemyVerifyEvent e) {
         if (!(e.getVictim() instanceof Player)) return;
         if ((!RunicPvPAPI.isOutlaw(((Player) e.getVictim())) || !RunicPvPAPI.isOutlaw(e.getCaster()))
-                && !RunicPvP.getDuelManager().areDueling(e.getCaster(), (Player) e.getVictim()))
+                && !RunicPvPAPI.areDueling(e.getCaster(), (Player) e.getVictim()))
             e.setCancelled(true);
     }
 
     @EventHandler
     public void onSpellDamage(SpellDamageEvent e) {
         if (!(e.getVictim() instanceof Player)) return;
-        if (!canCreatePvPEvent(e.getPlayer(), e.getVictim()))
-            e.setCancelled(true);
+        Player victim = (Player) e.getVictim();
+        if (!playersCanFight(e.getPlayer(), victim)) e.setCancelled(true);
     }
 
     @EventHandler
     public void onWeaponDamage(WeaponDamageEvent e) {
         if (!(e.getVictim() instanceof Player)) return;
-        if (!canCreatePvPEvent(e.getPlayer(), e.getVictim()))
-            e.setCancelled(true);
+        Player victim = (Player) e.getVictim();
+        if (!playersCanFight(e.getPlayer(), victim)) e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST) // runs LAST
@@ -63,15 +69,44 @@ public class PvPListener implements Listener {
         if (!(e.getKiller()[0] instanceof Player)) return;
         Player killer = (Player) e.getKiller()[0];
         if (!RunicPvPAPI.isOutlaw((killer)) || !RunicPvPAPI.isOutlaw(e.getVictim())) return;
-        if (RunicPvP.getDuelManager().areDueling(killer, e.getVictim())) return;
+        if (RunicPvPAPI.areDueling(killer, e.getVictim())) return;
         if (e.isCancelled()) return;
         RunicPvP.getOutlawManager().onKill(killer, e.getVictim());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST) // runs LAST
+    @EventHandler(priority = EventPriority.LOWEST) // runs FIRST
     public void onQuit(CharacterQuitEvent e) {
-        if (!playersFightingPlayers.contains(e.getPlayer().getUniqueId())) return;
-        // todo combat logging logic here
+        if (!playersFightingPlayers.containsKey(e.getPlayer().getUniqueId())) return;
+        Player combatLogger = e.getPlayer();
+        Player lastPlayerWhoTheyFought = Bukkit.getPlayer(playersFightingPlayers.get(combatLogger.getUniqueId()));
+        RunicDeathEvent runicDeathEvent = new RunicDeathEvent(combatLogger, lastPlayerWhoTheyFought);
+        Bukkit.getPluginManager().callEvent(runicDeathEvent);
+    }
+
+
+    /**
+     * Checks whether two players are able to engage in combat.
+     * If it's a PvP event (everything except dueling), it flags them for PvP combat.
+     * Otherwise, it places them in regular combat (duels).
+     *
+     * @param player the attack
+     * @param victim the defender
+     * @return true if they can fight
+     */
+    private boolean playersCanFight(Player player, Player victim) {
+        if (canCreatePvPEvent(player, victim)) {
+            RunicPvPEvent runicPvPEvent = new RunicPvPEvent(player, victim);
+            Bukkit.getPluginManager().callEvent(runicPvPEvent);
+            return true;
+        } else if (RunicPvPAPI.areDueling(player, victim)) {
+            EnterCombatEvent enterCombatEventPlayerOne = new EnterCombatEvent(player);
+            Bukkit.getPluginManager().callEvent(enterCombatEventPlayerOne);
+            EnterCombatEvent enterCombatEventPlayerTwo = new EnterCombatEvent(victim);
+            Bukkit.getPluginManager().callEvent(enterCombatEventPlayerTwo);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -84,10 +119,9 @@ public class PvPListener implements Listener {
     private boolean canCreatePvPEvent(Player player, Entity entity) {
         if (RunicPvPAPI.isPlayerValidTarget(player, entity)) {
             Player victim = (Player) entity;
-            RunicPvPEvent runicPvPEvent = new RunicPvPEvent(player, victim);
-            Bukkit.getPluginManager().callEvent(runicPvPEvent);
-            return true;
-        } else
+            return !RunicPvPAPI.areDueling(player, victim);
+        } else {
             return false;
+        }
     }
 }

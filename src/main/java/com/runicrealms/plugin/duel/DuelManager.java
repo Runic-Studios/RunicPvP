@@ -17,19 +17,17 @@ import java.util.Set;
 @SuppressWarnings("deprecation")
 public class DuelManager implements Listener {
 
-    private final HashSet<DuelRequest> duelRequests;
-    private final HashSet<Duel> currentDuels;
+    private static final HashSet<DuelRequest> duelRequests = new HashSet<>();
+    private static final HashSet<Duel> currentDuels = new HashSet<>();
 
     public DuelManager() {
-        duelRequests = new HashSet<>();
-        currentDuels = new HashSet<>();
         RunicPvP.inst().getServer().getPluginManager().registerEvents(this, RunicPvP.inst());
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::tryRequestTimeout, 0, 20L);
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::checkDuelRadius, 0, 20L);
     }
 
-    /*
-
+    /**
+     * Forfeit duels on logout
      */
     @EventHandler
     public void onQuit(CharacterQuitEvent e) {
@@ -44,8 +42,8 @@ public class DuelManager implements Listener {
         }
     }
 
-    /*
-
+    /**
+     * Lose duel on death
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRunicDeath(RunicDeathEvent e) {
@@ -61,8 +59,8 @@ public class DuelManager implements Listener {
         }
     }
 
-    /*
-
+    /**
+     * Automatically timeout duel requests after a duration
      */
     private void tryRequestTimeout() {
         for (DuelRequest duelRequest : duelRequests) {
@@ -73,8 +71,8 @@ public class DuelManager implements Listener {
         }
     }
 
-    /*
-
+    /**
+     * Periodically check to ensure dueling players don't leave duel zone
      */
     private void checkDuelRadius() {
         for (Duel duel : getCurrentDuels()) {
@@ -101,12 +99,13 @@ public class DuelManager implements Listener {
         return duelRequest;
     }
 
-    public Set<Duel> getCurrentDuels() {
+    public static Set<Duel> getCurrentDuels() {
         return Collections.synchronizedSet(currentDuels);
     }
 
     /**
      * Checks whether a single player is currently dueling.
+     *
      * @param player player to check
      * @return true if player is dueling
      */
@@ -120,11 +119,12 @@ public class DuelManager implements Listener {
 
     /**
      * Checks whether both players are dueling each other!
+     *
      * @param damager player who is attacking
-     * @param victim player who is defending
+     * @param victim  player who is defending
      * @return true if players are dueling each other
      */
-    public boolean areDueling(Player damager, Player victim) {
+    public static boolean areDueling(Player damager, Player victim) {
         for (Duel duel : getCurrentDuels()) {
             if (duel.getChallenger().equals(damager) && duel.getDefender().equals(victim)) {
                 return true;
