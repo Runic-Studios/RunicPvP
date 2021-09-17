@@ -35,8 +35,10 @@ public class PvPListener implements Listener {
 
     @EventHandler
     public void onLeaveCombat(LeaveCombatEvent e) {
-        playersFightingPlayers.remove(e.getPlayer().getUniqueId());
-        e.getPlayer().sendMessage(ChatColor.DARK_GREEN + "You have left PvP combat!");
+        if (playersFightingPlayers.containsKey(e.getPlayer().getUniqueId())) {
+            playersFightingPlayers.remove(e.getPlayer().getUniqueId());
+            e.getPlayer().sendMessage(ChatColor.DARK_GREEN + "You have left PvP combat!");
+        }
     }
 
     /*
