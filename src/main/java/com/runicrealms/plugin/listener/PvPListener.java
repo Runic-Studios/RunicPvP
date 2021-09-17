@@ -7,6 +7,7 @@ import com.runicrealms.plugin.event.RunicPvPEvent;
 import com.runicrealms.plugin.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,6 +66,7 @@ public class PvPListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST) // runs LAST
     public void onRunicDeath(RunicDeathEvent e) {
+        if (e.getVictim().getGameMode() == GameMode.CREATIVE) return;
         if (e.getKiller() == null) return;
         if (!(e.getKiller()[0] instanceof Player)) return;
         Player killer = (Player) e.getKiller()[0];
