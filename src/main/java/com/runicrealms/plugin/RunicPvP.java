@@ -9,7 +9,7 @@ import com.runicrealms.plugin.listener.OutlawBonusListener;
 import com.runicrealms.plugin.listener.PvPListener;
 import com.runicrealms.plugin.manager.BoardManager;
 import com.runicrealms.plugin.manager.OutlawManager;
-import com.runicrealms.plugin.shop.OutlawToggleShop;
+import com.runicrealms.plugin.shop.PvPShopFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -44,7 +44,7 @@ public final class RunicPvP extends JavaPlugin {
         /*
         Shops
          */
-        new OutlawToggleShop();
+        new PvPShopFactory();
     }
 
     @Override

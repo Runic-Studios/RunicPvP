@@ -28,6 +28,10 @@ public class CMDDuel extends BaseCommand {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in a safe zone!");
             return;
         }
+        if (!sender.getLocation().getWorld().equals("Alterra")) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in the instance world!");
+            return;
+        }
         for (DuelRequest duelRequest : RunicPvP.getDuelManager().getDuelRequests()) {
             if (duelRequest.getSender().equals(sender)) {
                 sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You already have an outstanding challenge!");
@@ -84,6 +88,10 @@ public class CMDDuel extends BaseCommand {
         if (duelRequest != null) {
             if (RunicCoreAPI.isSafezone(player.getLocation())) {
                 player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot accept a duel request in a safe zone!");
+                return;
+            }
+            if (!player.getLocation().getWorld().equals("Alterra")) {
+                player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot accept a duel request in the instance world!");
                 return;
             }
             duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.ACCEPTED);
