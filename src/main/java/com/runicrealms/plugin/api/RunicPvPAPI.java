@@ -3,10 +3,13 @@ package com.runicrealms.plugin.api;
 import com.runicrealms.plugin.duel.DuelManager;
 import com.runicrealms.plugin.utilities.NametagUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class RunicPvPAPI {
+
+    private static final int MINIMUM_OUTLAW_LEVEL = 25;
 
     /**
      * Checks whether the two given players are currently dueling
@@ -17,6 +20,15 @@ public class RunicPvPAPI {
      */
     public static boolean areDueling(Player playerOne, Player playerTwo) {
         return DuelManager.areDueling(playerOne, playerTwo);
+    }
+
+    /**
+     * Returns the minimum level required to flag for PvP
+     *
+     * @return minimum pvp flag level
+     */
+    public static int getMinimumOutlawLevel() {
+        return MINIMUM_OUTLAW_LEVEL;
     }
 
     /**
@@ -35,6 +47,16 @@ public class RunicPvPAPI {
      * @param player to toggle
      */
     public static void toggleOutlaw(Player player) {
+        if (player.getLevel() < MINIMUM_OUTLAW_LEVEL) {
+            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+            player.sendMessage
+                    (
+                            ChatColor.RED + "You must reach level " +
+                                    ChatColor.WHITE + MINIMUM_OUTLAW_LEVEL +
+                                    ChatColor.RED + " to become an outlaw!"
+                    );
+            return;
+        }
         /*
         toggle their current outlaw status from whatever it currently is set their rating to default EVERY toggle
         (if it is higher than base value)

@@ -8,7 +8,6 @@ import com.runicrealms.plugin.item.shops.RunicShopItem;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.manager.OutlawManager;
 import com.runicrealms.plugin.utilities.ChatUtils;
-import com.runicrealms.plugin.utilities.ColorUtil;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import org.bukkit.ChatColor;
@@ -96,6 +95,8 @@ public class PvPShopFactory {
         if (meta != null && meta.getLore() != null) {
             meta.setDisplayName(ChatColor.YELLOW + "Toggle Outlaw Mode");
             List<String> lore = meta.getLore();
+            lore.add(ChatColor.GRAY + "Lv. Min " + ChatColor.WHITE + RunicPvPAPI.getMinimumOutlawLevel());
+            lore.add("");
             lore.addAll(ChatUtils.formattedText(
                     "&7This will toggle &4&LOUTLAW &4&lMODE&7! While in this mode, " +
                             "you receive &f" + (int) (OutlawManager.getPercentBonus() * 100) +
@@ -103,8 +104,6 @@ public class PvPShopFactory {
                             "players &7while not in safe zones! Disabling Outlaw Mode " +
                             "while above the default rating (" + RunicCoreAPI.getBaseOutlawRating() +
                             ") will RESET your rating."));
-            lore.add("");
-            lore.add(ColorUtil.format("&6Price: &a&lFREE"));
             meta.setLore(lore);
             iconWithLore.setItemMeta(meta);
         }
