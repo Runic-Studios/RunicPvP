@@ -82,8 +82,8 @@ public class PvPShopFactory {
         ItemStack vendorItem = new ItemStack(Material.SKELETON_SKULL);
         ItemMeta meta = vendorItem.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(ChatColor.YELLOW + "Head Outlaw Garrett");
-            meta.setLore(Collections.singletonList(ChatColor.GRAY + "Toggle Outlaw Mode!"));
+            meta.setDisplayName(ChatColor.YELLOW + "Toggle Outlaw Mode");
+            meta.setLore(Collections.singletonList(""));
             vendorItem.setItemMeta(meta);
         }
         return vendorItem;
@@ -94,7 +94,7 @@ public class PvPShopFactory {
         ItemMeta meta = iconWithLore.getItemMeta();
         if (meta != null && meta.getLore() != null) {
             meta.setDisplayName(ChatColor.YELLOW + "Toggle Outlaw Mode");
-            List<String> lore = meta.getLore();
+            List<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + "Lv. Min " + ChatColor.WHITE + RunicPvPAPI.getMinimumOutlawLevel());
             lore.add("");
             lore.addAll(ChatUtils.formattedText(
