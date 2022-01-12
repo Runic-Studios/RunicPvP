@@ -28,7 +28,7 @@ public class CMDDuel extends BaseCommand {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in a safe zone!");
             return;
         }
-        if (!sender.getLocation().getWorld().equals("Alterra")) {
+        if (!sender.getLocation().getWorld().getName().equals("Alterra")) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in the instance world!");
             return;
         }
@@ -90,7 +90,7 @@ public class CMDDuel extends BaseCommand {
                 player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot accept a duel request in a safe zone!");
                 return;
             }
-            if (!player.getLocation().getWorld().equals("Alterra")) {
+            if (!player.getLocation().getWorld().getName().equals("Alterra")) {
                 player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot accept a duel request in the instance world!");
                 return;
             }
