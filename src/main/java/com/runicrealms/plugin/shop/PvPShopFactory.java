@@ -22,7 +22,7 @@ public class PvPShopFactory {
 
     public PvPShopFactory() {
         getOutlawToggleShop();
-        getOutlawVendor();
+//        getArenaVendor();
     }
 
     private RunicShopGeneric getOutlawToggleShop() {
@@ -37,42 +37,42 @@ public class PvPShopFactory {
     private final ItemStack outlawDagger = RunicItemsAPI.generateItemFromTemplate("outlaw-vagabonds-letter-opener").generateItem();
     private final ItemStack outlawShield = RunicItemsAPI.generateItemFromTemplate("outlaw-fallen-soldiers-shield").generateItem();
 
-    private RunicShopGeneric getOutlawVendor() {
-        LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();
-        shopItems.add(new RunicShopItem(750, "Coin", outlawFlail, runOutlawVendorBuy(outlawFlail, 750)));
-        shopItems.add(new RunicShopItem(750, "Coin", outlawWand, runOutlawVendorBuy(outlawWand, 750)));
-        shopItems.add(new RunicShopItem(750, "Coin", outlawDagger, runOutlawVendorBuy(outlawDagger, 750)));
-        shopItems.add(new RunicShopItem(750, "Coin", outlawShield, runOutlawVendorBuy(outlawShield, 750)));
-        shopItems.forEach(runicShopItem -> runicShopItem.setRemovePayment(false));
-        return new RunicShopGeneric(45, ChatColor.YELLOW + "Outlaw Vendor", Arrays.asList(53, 54), shopItems);
-    }
-
-    /**
-     * This...
-     *
-     * @param itemToPurchase
-     * @param price
-     * @return
-     */
-    private RunicItemRunnable runOutlawVendorBuy(ItemStack itemToPurchase, int price) {
-        return player -> {
-            int outlawRating = RunicCoreAPI.getPlayerCache(player).getRating();
-            if (outlawRating >= OUTLAW_VENDOR_RATING_THRESHOLD) {
-                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-                player.sendMessage(ChatColor.GREEN + "You've purchased an Outlaw Vendor item!");
-                ItemRemover.takeItem(player, CurrencyUtil.goldCoin(), price);
-                RunicItemsAPI.addItem(player.getInventory(), itemToPurchase);
-            } else {
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1.0f);
-                player.sendMessage
-                        (
-                                ChatColor.RED + "You must have earned at least " +
-                                        ChatColor.YELLOW + OUTLAW_VENDOR_RATING_THRESHOLD + ChatColor.RED +
-                                        " outlaw rating to purchase this!"
-                        );
-            }
-        };
-    }
+//    private RunicShopGeneric getArenaVendor() {
+//        LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();
+//        shopItems.add(new RunicShopItem(750, "Coin", outlawFlail, runArenaVendorBuy(outlawFlail, 750)));
+//        shopItems.add(new RunicShopItem(750, "Coin", outlawWand, runArenaVendorBuy(outlawWand, 750)));
+//        shopItems.add(new RunicShopItem(750, "Coin", outlawDagger, runArenaVendorBuy(outlawDagger, 750)));
+//        shopItems.add(new RunicShopItem(750, "Coin", outlawShield, runArenaVendorBuy(outlawShield, 750)));
+//        shopItems.forEach(runicShopItem -> runicShopItem.setRemovePayment(false));
+//        return new RunicShopGeneric(45, ChatColor.YELLOW + "Arena Vendor", Arrays.asList(53, 54), shopItems);
+//    }
+//
+//    /**
+//     * This...
+//     *
+//     * @param itemToPurchase
+//     * @param price
+//     * @return
+//     */
+//    private RunicItemRunnable runArenaVendorBuy(ItemStack itemToPurchase, int price) {
+//        return player -> {
+//            int outlawRating = RunicCoreAPI.getPlayerCache(player).getRating();
+//            if (outlawRating >= OUTLAW_VENDOR_RATING_THRESHOLD) {
+//                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+//                player.sendMessage(ChatColor.GREEN + "You've purchased an Outlaw Vendor item!");
+//                ItemRemover.takeItem(player, CurrencyUtil.goldCoin(), price);
+//                RunicItemsAPI.addItem(player.getInventory(), itemToPurchase);
+//            } else {
+//                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1.0f);
+//                player.sendMessage
+//                        (
+//                                ChatColor.RED + "You must have earned at least " +
+//                                        ChatColor.YELLOW + OUTLAW_VENDOR_RATING_THRESHOLD + ChatColor.RED +
+//                                        " outlaw rating to purchase this!"
+//                        );
+//            }
+//        };
+//    }
 
     private RunicItemRunnable runShopBuy() {
         return RunicPvPAPI::toggleOutlaw;
@@ -101,9 +101,7 @@ public class PvPShopFactory {
                     "&7This will toggle &4&LOUTLAW &4&lMODE&7! While in this mode, " +
                             "you receive &f" + (int) (OutlawManager.getPercentBonus() * 100) +
                             "% &7additional experience from mobs and can be &cdamaged by other " +
-                            "players &7while not in safe zones! Disabling Outlaw Mode " +
-                            "while above the default rating (" + RunicCoreAPI.getBaseOutlawRating() +
-                            ") will RESET your rating."));
+                            "players &7while not in safe zones!"));
             meta.setLore(lore);
             iconWithLore.setItemMeta(meta);
         }

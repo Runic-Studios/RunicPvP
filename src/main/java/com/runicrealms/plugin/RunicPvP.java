@@ -18,7 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class RunicPvP extends JavaPlugin {
 
     private static Plugin plugin;
-    private static BoardManager boardManager;
+//    private static BoardManager boardManager;
     private static ConquestManager conquestManager;
     private static DuelManager duelManager;
     private static OutlawManager outlawManager;
@@ -27,7 +27,7 @@ public final class RunicPvP extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        boardManager = new BoardManager();
+//        boardManager = new BoardManager();
         conquestManager = new ConquestManager();
         duelManager = new DuelManager();
         outlawManager = new OutlawManager();
@@ -50,7 +50,7 @@ public final class RunicPvP extends JavaPlugin {
     @Override
     public void onDisable() {
         plugin = null;
-        boardManager = null;
+//        boardManager = null;
         conquestManager = null;
         duelManager = null;
         outlawManager = null;
@@ -60,9 +60,9 @@ public final class RunicPvP extends JavaPlugin {
     public static Plugin inst() { // Get the plugin instance
         return plugin;
     }
-    public static BoardManager getBoardManager() {
-        return boardManager;
-    }
+//    public static BoardManager getBoardManager() {
+//        return boardManager;
+//    }
     public static ConquestManager getConquestManager() {
         return conquestManager;
     }

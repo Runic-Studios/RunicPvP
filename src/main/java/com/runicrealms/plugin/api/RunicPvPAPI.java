@@ -65,10 +65,10 @@ public class RunicPvPAPI {
         NametagUtil.updateNametag(player);
         String status = RunicPvPAPI.isOutlaw(player) ? ChatColor.GREEN + "ENABLED" : ChatColor.RED + "DISABLED";
         player.sendMessage(ChatColor.YELLOW + "Your outlaw status is now: " + status);
-        if (RunicCoreAPI.getPlayerCache(player).getRating() > RunicCoreAPI.getBaseOutlawRating()) {
-            RunicCoreAPI.getPlayerCache(player).setRating(RunicCoreAPI.getBaseOutlawRating());
-            player.sendMessage(ChatColor.GRAY + "Your outlaw rating was above the default rating, so it has been reset.");
-        }
+//        if (RunicCoreAPI.getPlayerCache(player).getRating() > RunicCoreAPI.getBaseOutlawRating()) {
+//            RunicCoreAPI.getPlayerCache(player).setRating(RunicCoreAPI.getBaseOutlawRating());
+//            player.sendMessage(ChatColor.GRAY + "Your outlaw rating was above the default rating, so it has been reset.");
+//        }
     }
 
     /**

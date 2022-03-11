@@ -66,17 +66,17 @@ public class PvPListener implements Listener {
         if (!playersCanFight(e.getPlayer(), victim)) e.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST) // runs LAST
-    public void onRunicDeath(RunicDeathEvent e) {
-        if (e.getVictim().getGameMode() == GameMode.CREATIVE) return;
-        if (e.getKiller() == null) return;
-        if (!(e.getKiller()[0] instanceof Player)) return;
-        Player killer = (Player) e.getKiller()[0];
-        if (!RunicPvPAPI.isOutlaw((killer)) || !RunicPvPAPI.isOutlaw(e.getVictim())) return;
-        if (RunicPvPAPI.areDueling(killer, e.getVictim())) return;
-        if (e.isCancelled()) return;
-        RunicPvP.getOutlawManager().onKill(killer, e.getVictim());
-    }
+//    @EventHandler(priority = EventPriority.HIGHEST) // runs LAST
+//    public void onRunicDeath(RunicDeathEvent e) {
+//        if (e.getVictim().getGameMode() == GameMode.CREATIVE) return;
+//        if (e.getKiller() == null) return;
+//        if (!(e.getKiller()[0] instanceof Player)) return;
+//        Player killer = (Player) e.getKiller()[0];
+//        if (!RunicPvPAPI.isOutlaw((killer)) || !RunicPvPAPI.isOutlaw(e.getVictim())) return;
+//        if (RunicPvPAPI.areDueling(killer, e.getVictim())) return;
+//        if (e.isCancelled()) return;
+//        RunicPvP.getOutlawManager().onKill(killer, e.getVictim());
+//    }
 
     @EventHandler(priority = EventPriority.LOWEST) // runs FIRST
     public void onQuit(CharacterQuitEvent e) {

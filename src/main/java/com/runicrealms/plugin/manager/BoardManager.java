@@ -37,19 +37,19 @@ public class BoardManager {
     }
 
     private void refreshBoard(Hologram hologram) {
-        hologram.clearLines();
-        hologram.appendTextLine(BOARD_TITLE);
-        Map<Player, Integer> ratings = RunicPvP.getOutlawManager().getOutlawRatings();
-        int count = 0;
-        for (Map.Entry<Player, Integer> player : ratings.entrySet()) {
-            if (count >= 5) return;
-            hologram.appendTextLine
-                    (
-                            player.getKey().getName() + " " +
-                            ChatColor.YELLOW + "| " +
-                            ChatColor.RED + "[" + player.getValue() + "]"
-                    );
-            count++;
-        }
+//        hologram.clearLines();
+//        hologram.appendTextLine(BOARD_TITLE);
+//        Map<Player, Integer> ratings = RunicPvP.getOutlawManager().getOutlawRatings();
+//        int count = 0;
+//        for (Map.Entry<Player, Integer> player : ratings.entrySet()) {
+//            if (count >= 5) return;
+//            hologram.appendTextLine
+//                    (
+//                            player.getKey().getName() + " " +
+//                            ChatColor.YELLOW + "| " +
+//                            ChatColor.RED + "[" + player.getValue() + "]"
+//                    );
+//            count++;
+//        }
     }
 }
