@@ -1,9 +1,9 @@
 package com.runicrealms.plugin.command;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
+import com.runicrealms.libs.acf.BaseCommand;
+import com.runicrealms.libs.acf.annotation.*;
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
-import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.duel.Duel;
 import com.runicrealms.plugin.duel.DuelRequest;
 import com.runicrealms.plugin.duel.IDuelRequest;
@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 @CommandAlias("duel")
+@SuppressWarnings("unused")
 public class CMDDuel extends BaseCommand {
 
     private static final String DUEL_PREFIX = ChatColor.RED + "[Duel] " + ChatColor.GOLD + "» ";
@@ -20,11 +21,11 @@ public class CMDDuel extends BaseCommand {
     @Syntax("<player>")
     @CommandCompletion("@players")
     public static void onCommandDuel(Player sender, @Default("Unknown User") String targetName) {
-        if (RunicCoreAPI.isInCombat(sender)) {
+        if (RunicCore.getCombatAPI().isInCombat(sender.getUniqueId())) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in combat!");
             return;
         }
-        if (RunicCoreAPI.isSafezone(sender.getLocation())) {
+        if (RunicCore.getRegionAPI().isSafezone(sender.getLocation())) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot send a duel request in a safe zone!");
             return;
         }
@@ -38,16 +39,21 @@ public class CMDDuel extends BaseCommand {
                 return;
             }
         }
-        if(targetName.isEmpty()) {
+        if (targetName.isEmpty()) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "Player not found!");
             return;
         }
         Player target = Bukkit.getPlayer(targetName);
-        if(target == null) {
+        if (target == null) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "Player not found!");
             return;
         }
-        if (RunicCoreAPI.isInCombat(target)) {
+        if (RunicCore.getPartyAPI().hasParty(sender.getUniqueId())
+                && RunicCore.getPartyAPI().getParty(sender.getUniqueId()).getMembersWithLeader().contains(target)) {
+            sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot challenge a player in your party!");
+            return;
+        }
+        if (RunicCore.getCombatAPI().isInCombat(target.getUniqueId())) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "That player is in combat!");
             return;
         }
@@ -59,7 +65,7 @@ public class CMDDuel extends BaseCommand {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "That player is already in a duel!");
             return;
         }
-        if(target.equals(sender)) {
+        if (target.equals(sender)) {
             sender.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot challenge yourself!");
             return;
         }
@@ -81,12 +87,16 @@ public class CMDDuel extends BaseCommand {
         RunicPvP.getDuelManager().getDuelRequests().add(duelRequest);
     }
 
+    public static String getDuelPrefix() {
+        return DUEL_PREFIX;
+    }
+
     @Subcommand("accept|a")
     @Conditions("is-player")
     public void onCommandAccept(Player player) {
         DuelRequest duelRequest = RunicPvP.getDuelManager().getDuelRequest(player);
         if (duelRequest != null) {
-            if (RunicCoreAPI.isSafezone(player.getLocation())) {
+            if (RunicCore.getRegionAPI().isSafezone(player.getLocation())) {
                 player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot accept a duel request in a safe zone!");
                 return;
             }
@@ -107,9 +117,5 @@ public class CMDDuel extends BaseCommand {
             duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.DENIED);
         else
             player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You have no outstanding duel challenges!");
-    }
-
-    public static String getDuelPrefix() {
-        return DUEL_PREFIX;
     }
 }

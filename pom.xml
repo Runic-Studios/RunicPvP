@@ -1,48 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.runicrealms.plugin</groupId>
     <artifactId>RunicPvP</artifactId>
-    <version>1.16.4</version>
-    <packaging>jar</packaging>
+    <version>1.16.5</version>
 
     <name>RunicPvP</name>
 
+    <description>Runic Realms PvP Plugin</description>
+
     <properties>
-        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <fileOutput>${project.basedir}/../lib</fileOutput>
     </properties>
 
     <build>
+        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.7.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -98,12 +82,6 @@
     </repositories>
 
     <dependencies>
-        <!-- ACF API -->
-        <dependency>
-            <groupId>co.aikar</groupId>
-            <artifactId>acf-paper</artifactId>
-            <version>0.5.0-SNAPSHOT</version>
-        </dependency>
         <!-- HolographicDisplays API -->
         <dependency>
             <groupId>com.gmail.filoghost.holographicdisplays</groupId>
@@ -115,9 +93,9 @@
         <dependency>
             <groupId>net.elseland.xikage</groupId>
             <artifactId>mythicmobs</artifactId>
-            <version>4.11.0</version>
+            <version>4.12.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/../lib/MythicMobs-4.11.0.jar</systemPath>
+            <systemPath>${project.basedir}/../lib/MythicMobs-4.12.0.jar</systemPath>
         </dependency>
         <!-- Paper API -->
         <dependency>
@@ -130,25 +108,25 @@
         <dependency>
             <groupId>com.runicrealms.plugin</groupId>
             <artifactId>RunicCore</artifactId>
-            <version>1.15.2</version>
+            <version>1.16.5</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/../lib/RunicCore-1.16.4.jar</systemPath>
+            <systemPath>${project.basedir}/../lib/RunicCore-1.16.5.jar</systemPath>
         </dependency>
         <!-- RunicItems -->
         <dependency>
             <groupId>com.runicrealms.runicitems</groupId>
             <artifactId>RunicItems</artifactId>
-            <version>1.16.4</version>
+            <version>1.16.5</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/../lib/RunicItems-1.16.4.jar</systemPath>
+            <systemPath>${project.basedir}/../lib/RunicItems-1.16.5.jar</systemPath>
         </dependency>
         <!-- RunicProfessions -->
         <dependency>
             <groupId>com.runicrealms.plugin</groupId>
             <artifactId>RunicProfessions</artifactId>
-            <version>1.16.4</version>
+            <version>1.16.5</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/../lib/RunicProfessions-1.16.4.jar</systemPath>
+            <systemPath>${project.basedir}/../lib/RunicProfessions-1.16.5.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

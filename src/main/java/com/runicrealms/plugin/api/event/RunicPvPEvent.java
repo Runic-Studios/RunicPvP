@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.event;
+package com.runicrealms.plugin.api.event;
 
 import com.runicrealms.plugin.events.EnterCombatEvent;
 import org.bukkit.entity.Player;

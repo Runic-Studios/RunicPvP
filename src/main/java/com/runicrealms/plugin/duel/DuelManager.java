@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.duel;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.character.api.CharacterQuitEvent;
 import com.runicrealms.plugin.events.RunicDeathEvent;
@@ -16,9 +17,8 @@ import java.util.Set;
 
 @SuppressWarnings("deprecation")
 public class DuelManager implements Listener {
-
-    private static final HashSet<DuelRequest> duelRequests = new HashSet<>();
-    private static final HashSet<Duel> currentDuels = new HashSet<>();
+    private final HashSet<DuelRequest> duelRequests = new HashSet<>();
+    private final HashSet<Duel> currentDuels = new HashSet<>();
 
     public DuelManager() {
         RunicPvP.inst().getServer().getPluginManager().registerEvents(this, RunicPvP.inst());
@@ -27,48 +27,21 @@ public class DuelManager implements Listener {
     }
 
     /**
-     * Forfeit duels on logout
+     * Checks whether both players are dueling each other!
+     *
+     * @param damager player who is attacking
+     * @param victim  player who is defending
+     * @return true if players are dueling each other
      */
-    @EventHandler
-    public void onQuit(CharacterQuitEvent e) {
+    public boolean areDueling(Player damager, Player victim) {
         for (Duel duel : getCurrentDuels()) {
-            if (e.getPlayer().equals(duel.getChallenger()) || e.getPlayer().equals(duel.getDefender())) {
-                if (e.getPlayer() == duel.getChallenger())
-                    duel.setDuelResult(IDuel.DuelResult.DEFEAT);
-                else
-                    duel.setDuelResult(IDuel.DuelResult.VICTORY);
-                duel.endDuel(duel.getDuelResult());
+            if (duel.getChallenger().equals(damager) && duel.getDefender().equals(victim)) {
+                return true;
+            } else if (duel.getDefender().equals(damager) && duel.getChallenger().equals(victim)) {
+                return true;
             }
         }
-    }
-
-    /**
-     * Lose duel on death
-     */
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onRunicDeath(RunicDeathEvent e) {
-        for (Duel duel : getCurrentDuels()) {
-            if (e.getVictim().equals(duel.getChallenger()) || e.getVictim().equals(duel.getDefender())) {
-                e.setCancelled(true);
-                if (e.getVictim() == duel.getChallenger())
-                    duel.setDuelResult(IDuel.DuelResult.DEFEAT);
-                else
-                    duel.setDuelResult(IDuel.DuelResult.VICTORY);
-                duel.endDuel(duel.getDuelResult());
-            }
-        }
-    }
-
-    /**
-     * Automatically timeout duel requests after a duration
-     */
-    private void tryRequestTimeout() {
-        for (DuelRequest duelRequest : duelRequests) {
-            long startTime = duelRequest.getRequestTime();
-            if (!duelRequest.countdownStarted() && System.currentTimeMillis() - startTime > (DuelRequest.getRequestTimeout() * 1000)) {
-                duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.TIMEOUT);
-            }
-        }
+        return false;
     }
 
     /**
@@ -86,8 +59,8 @@ public class DuelManager implements Listener {
         }
     }
 
-    public HashSet<DuelRequest> getDuelRequests() {
-        return duelRequests;
+    public Set<Duel> getCurrentDuels() {
+        return Collections.synchronizedSet(currentDuels);
     }
 
     public DuelRequest getDuelRequest(Player recipient) {
@@ -99,8 +72,8 @@ public class DuelManager implements Listener {
         return duelRequest;
     }
 
-    public static Set<Duel> getCurrentDuels() {
-        return Collections.synchronizedSet(currentDuels);
+    public HashSet<DuelRequest> getDuelRequests() {
+        return duelRequests;
     }
 
     /**
@@ -118,20 +91,51 @@ public class DuelManager implements Listener {
     }
 
     /**
-     * Checks whether both players are dueling each other!
-     *
-     * @param damager player who is attacking
-     * @param victim  player who is defending
-     * @return true if players are dueling each other
+     * Forfeit duels on logout
      */
-    public static boolean areDueling(Player damager, Player victim) {
+    @EventHandler
+    public void onQuit(CharacterQuitEvent event) {
         for (Duel duel : getCurrentDuels()) {
-            if (duel.getChallenger().equals(damager) && duel.getDefender().equals(victim)) {
-                return true;
-            } else if (duel.getDefender().equals(damager) && duel.getChallenger().equals(victim)) {
-                return true;
+            if (event.getPlayer().equals(duel.getChallenger()) || event.getPlayer().equals(duel.getDefender())) {
+                if (event.getPlayer() == duel.getChallenger())
+                    duel.setDuelResult(IDuel.DuelResult.DEFEAT);
+                else
+                    duel.setDuelResult(IDuel.DuelResult.VICTORY);
+                duel.endDuel(duel.getDuelResult());
             }
         }
-        return false;
+    }
+
+    /**
+     * Lose duel on death
+     */
+    @EventHandler(priority = EventPriority.LOWEST) // Runs first to cancel event
+    public void onRunicDeath(RunicDeathEvent event) {
+        if (event.getKiller().length <= 0) return;
+        if (!(event.getKiller()[0] instanceof Player killer)) return;
+        for (Duel duel : getCurrentDuels()) {
+            if (event.getVictim().equals(duel.getChallenger()) || event.getVictim().equals(duel.getDefender())) {
+                event.setCancelled(true);
+                if (event.getVictim() == duel.getChallenger())
+                    duel.setDuelResult(IDuel.DuelResult.DEFEAT);
+                else
+                    duel.setDuelResult(IDuel.DuelResult.VICTORY);
+                duel.endDuel(duel.getDuelResult());
+                RunicCore.getSpellAPI().healPlayer(event.getVictim(), event.getVictim(), 999999);
+                RunicCore.getSpellAPI().healPlayer(killer, killer, 999999);
+            }
+        }
+    }
+
+    /**
+     * Automatically timeout duel requests after a duration
+     */
+    private void tryRequestTimeout() {
+        for (DuelRequest duelRequest : duelRequests) {
+            long startTime = duelRequest.getRequestTime();
+            if (!duelRequest.countdownStarted() && System.currentTimeMillis() - startTime > (DuelRequest.getRequestTimeout() * 1000)) {
+                duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.TIMEOUT);
+            }
+        }
     }
 }
