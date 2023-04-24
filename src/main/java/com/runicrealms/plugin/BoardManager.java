@@ -1,14 +1,10 @@
-package com.runicrealms.plugin.manager;
+package com.runicrealms.plugin;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.runicrealms.plugin.RunicPvP;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
-import java.util.Map;
 
 public class BoardManager {
 
