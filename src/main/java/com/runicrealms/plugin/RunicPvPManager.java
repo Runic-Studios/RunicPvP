@@ -107,6 +107,7 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
 
     @Override
     public boolean playersCanFight(Player player, Player victim) {
+        if (RunicCore.getPartyAPI().isPartyMember(player.getUniqueId(), victim)) return false;
         int slotPlayer = RunicCore.getCharacterAPI().getCharacterSlot(player.getUniqueId());
         int slotVictim = RunicCore.getCharacterAPI().getCharacterSlot(victim.getUniqueId());
         boolean bothOutlaws = RunicPvP.getAPI().isOutlaw(player, slotPlayer) && RunicPvP.getAPI().isOutlaw(victim, slotVictim);

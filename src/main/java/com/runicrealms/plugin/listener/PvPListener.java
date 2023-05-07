@@ -26,9 +26,8 @@ public class PvPListener implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST) // first
     public void onAllyVerify(AllyVerifyEvent event) {
-        if (!(event.getRecipient() instanceof Player)) return;
+        if (!(event.getRecipient() instanceof Player recipient)) return;
         if (event.getRecipient().equals(event.getCaster())) return; // caster healed itself
-        Player recipient = (Player) event.getRecipient();
         if (RunicPvP.getAPI().playersCanFight(event.getCaster(), recipient))
             event.setCancelled(true);
     }
@@ -38,9 +37,8 @@ public class PvPListener implements Listener {
      */
     @EventHandler
     public void onEnemyVerify(EnemyVerifyEvent event) {
-        if (!(event.getVictim() instanceof Player)) return;
+        if (!(event.getVictim() instanceof Player victim)) return;
         Player caster = event.getCaster();
-        Player victim = (Player) event.getVictim();
         int slotCaster = RunicCore.getCharacterAPI().getCharacterSlot(caster.getUniqueId());
         int slotVictim = RunicCore.getCharacterAPI().getCharacterSlot(victim.getUniqueId());
         boolean isOutlawCaster = RunicPvP.getAPI().isOutlaw(caster, slotCaster);
@@ -88,8 +86,7 @@ public class PvPListener implements Listener {
      */
     @EventHandler
     public void onSpellDamage(MagicDamageEvent event) {
-        if (!(event.getVictim() instanceof Player)) return;
-        Player victim = (Player) event.getVictim();
+        if (!(event.getVictim() instanceof Player victim)) return;
         if (!RunicPvP.getAPI().playersCanFight(event.getPlayer(), victim)) {
             event.setCancelled(true);
         } else {
@@ -107,8 +104,7 @@ public class PvPListener implements Listener {
      */
     @EventHandler
     public void onWeaponDamage(PhysicalDamageEvent event) {
-        if (!(event.getVictim() instanceof Player)) return;
-        Player victim = (Player) event.getVictim();
+        if (!(event.getVictim() instanceof Player victim)) return;
         if (!RunicPvP.getAPI().playersCanFight(event.getPlayer(), victim)) {
             event.setCancelled(true);
         } else {
