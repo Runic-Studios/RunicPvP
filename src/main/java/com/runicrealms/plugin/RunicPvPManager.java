@@ -128,6 +128,11 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
                     );
             return;
         }
+        if (RunicCore.getPartyAPI().hasParty(player.getUniqueId())) {
+            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+            player.sendMessage(ChatColor.RED + "You cannot toggle outlaw mode while in a party!");
+            return;
+        }
         UUID uuid = player.getUniqueId();
         int slot = RunicCore.getCharacterAPI().getCharacterSlot(uuid);
         // Toggle their current outlaw status from whatever it currently is

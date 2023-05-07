@@ -39,7 +39,7 @@ public class PvPShopFactory {
 
     private void loadOutlawToggleShop() {
         LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();
-        Map<String, Integer> requiredItems = new HashMap<String, Integer>() {{
+        Map<String, Integer> requiredItems = new HashMap<>() {{
             put("coin", 0);
         }};
         shopItems.add(new RunicShopItem(requiredItems, iconWithLore(toggleOutlawIcon()), runShopBuy()));
