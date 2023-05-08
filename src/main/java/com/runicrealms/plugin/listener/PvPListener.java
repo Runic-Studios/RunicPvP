@@ -63,11 +63,11 @@ public class PvPListener implements Listener {
         if (event.isCancelled()) return;
         EnterCombatEvent.tagPlayerAndPartyInCombat(event.getVictim()); // player is tagged in parent event
         if (!playersFightingPlayers.containsKey(event.getPlayer().getUniqueId())) {
-            event.getPlayer().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat!");
+            event.getPlayer().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat! Logging out counts as death!");
         }
         playersFightingPlayers.put(event.getPlayer().getUniqueId(), event.getVictim().getUniqueId()); // ALWAYS map our attacker to our victim
         if (!playersFightingPlayers.containsKey(event.getVictim().getUniqueId())) {
-            event.getVictim().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat!");
+            event.getVictim().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat! Logging out counts as death!");
             playersFightingPlayers.put(event.getVictim().getUniqueId(), event.getPlayer().getUniqueId()); // CONDITIONALLY map our victim to our attacker
         }
     }
