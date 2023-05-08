@@ -77,8 +77,8 @@ public class PvPListener implements Listener {
         if (!playersFightingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
         Player combatLogger = event.getPlayer();
         Player lastPlayerWhoTheyFought = Bukkit.getPlayer(playersFightingPlayers.get(combatLogger.getUniqueId()));
-        RunicDeathEvent runicDeathEvent = new RunicDeathEvent(combatLogger, lastPlayerWhoTheyFought);
-        Bukkit.getPluginManager().callEvent(runicDeathEvent);
+        RunicDeathEvent runicDeathEvent = new RunicDeathEvent(combatLogger, combatLogger.getLocation(), lastPlayerWhoTheyFought);
+        Bukkit.getScheduler().runTask(RunicPvP.inst(), () -> Bukkit.getPluginManager().callEvent(runicDeathEvent)); // Sync
     }
 
     /**
