@@ -66,6 +66,11 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
     }
 
     @Override
+    public boolean isDueling(Player player) {
+        return RunicPvP.getDuelManager().isInDuel(player);
+    }
+
+    @Override
     public boolean isOutlaw(Player player, int slot) {
         return pvpDataMap.get(player.getUniqueId()).getOutlawDataMap().get(slot).isOutlaw();
     }

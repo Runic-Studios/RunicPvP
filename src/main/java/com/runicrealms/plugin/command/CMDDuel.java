@@ -104,6 +104,14 @@ public class CMDDuel extends BaseCommand {
                 player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You cannot accept a duel request in the instance world!");
                 return;
             }
+            if (RunicPvP.getDuelManager().getCountdownSet().contains(player.getUniqueId())) {
+                player.sendMessage(DUEL_PREFIX + ChatColor.RED + "Your duel is beginning!");
+                return;
+            }
+            if (RunicPvP.getAPI().isDueling(player)) {
+                player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You have already accepted a duel!");
+                return;
+            }
             duelRequest.processDuelRequest(IDuelRequest.DuelRequestResult.ACCEPTED);
         } else
             player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You have no outstanding duel challenges!");

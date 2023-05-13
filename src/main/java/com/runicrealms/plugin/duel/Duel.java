@@ -8,10 +8,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class Duel implements IDuel {
-
     private static final int COUNTDOWN = 5;
     private static final String DUEL_PREFIX = CMDDuel.getDuelPrefix();
-    private static final int DUEL_RADIUS = 50; // max blocks players can leave from starting position before forfeiting
+    private static final int DUEL_RADIUS = 64; // max blocks players can leave from starting position before forfeiting
     private final Player challenger;
     private final Player defender;
     private final Location duelLocation;
@@ -21,6 +20,29 @@ public class Duel implements IDuel {
         this.challenger = challenger;
         this.defender = defender;
         duelLocation = challenger.getLocation();
+    }
+
+    public static int getCountdown() {
+        return COUNTDOWN;
+    }
+
+    public static int getDuelRadius() {
+        return DUEL_RADIUS;
+    }
+
+    private void endMessage(Player winner, Player loser) {
+        winner.sendMessage
+                (
+                        DUEL_PREFIX + "You won your duel against " +
+                                ChatColor.WHITE + loser.getName() + ChatColor.RED + "!"
+                );
+        winner.playSound(winner.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+        winner.playSound(loser.getLocation(), Sound.ENTITY_PLAYER_DEATH, 0.5f, 1.0f);
+        loser.sendMessage
+                (
+                        DUEL_PREFIX + "You lost your duel against " +
+                                ChatColor.WHITE + winner.getName() + ChatColor.RED + "!"
+                );
     }
 
     @Override
@@ -63,7 +85,7 @@ public class Duel implements IDuel {
                 defender.sendMessage
                         (
                                 DUEL_PREFIX + ChatColor.WHITE + challenger.getName() +
-                                ChatColor.RED + " left the duel area and forfeited the duel!"
+                                        ChatColor.RED + " left the duel area and forfeited the duel!"
                         );
                 defender.playSound(defender.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
             } else if (duelLocation.distanceSquared(defender.getLocation()) > (DUEL_RADIUS * DUEL_RADIUS)) {
@@ -71,34 +93,11 @@ public class Duel implements IDuel {
                 challenger.sendMessage
                         (
                                 DUEL_PREFIX + ChatColor.WHITE + defender.getName() +
-                                ChatColor.RED + " left the duel area and forfeited the duel!"
+                                        ChatColor.RED + " left the duel area and forfeited the duel!"
                         );
                 challenger.playSound(challenger.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
             }
         }
         RunicPvP.getDuelManager().getCurrentDuels().remove(this);
-    }
-
-    private void endMessage(Player winner, Player loser) {
-        winner.sendMessage
-                (
-                        DUEL_PREFIX + "You won your duel against " +
-                        ChatColor.WHITE + loser.getName() + ChatColor.RED + "!"
-                );
-        winner.playSound(winner.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-        winner.playSound(loser.getLocation(), Sound.ENTITY_PLAYER_DEATH, 0.5f, 1.0f);
-        loser.sendMessage
-                (
-                        DUEL_PREFIX + "You lost your duel against " +
-                        ChatColor.WHITE + winner.getName() + ChatColor.RED + "!"
-                );
-    }
-
-    public static int getCountdown() {
-        return COUNTDOWN;
-    }
-
-    public static int getDuelRadius() {
-        return DUEL_RADIUS;
     }
 }

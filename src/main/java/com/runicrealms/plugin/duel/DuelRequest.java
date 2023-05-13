@@ -36,6 +36,8 @@ public class DuelRequest implements IDuelRequest {
 
     @Override
     public void beginCountdown(Player challenger, Player defender) {
+        RunicPvP.getDuelManager().getCountdownSet().add(challenger.getUniqueId());
+        RunicPvP.getDuelManager().getCountdownSet().add(defender.getUniqueId());
         DuelRequest request = this;
         new BukkitRunnable() {
             int count = 0;
@@ -48,6 +50,8 @@ public class DuelRequest implements IDuelRequest {
                     RunicPvP.getDuelManager().getDuelRequests().remove(request);
                     Duel duel = new Duel(challenger, defender);
                     RunicPvP.getDuelManager().getCurrentDuels().add(duel);
+                    RunicPvP.getDuelManager().getCountdownSet().remove(challenger.getUniqueId());
+                    RunicPvP.getDuelManager().getCountdownSet().remove(defender.getUniqueId());
                     this.cancel();
                     if (!RunicCore.getCharacterAPI().getLoadedCharacters().contains(challenger.getUniqueId())) { // challenger quits
                         duel.setDuelResult(IDuel.DuelResult.DEFEAT);

@@ -34,6 +34,14 @@ public interface RunicPvPAPI {
     int getMinimumOutlawLevel();
 
     /**
+     * Checks whether the current player is dueling
+     *
+     * @param player to check
+     * @return true if the player is in a duel
+     */
+    boolean isDueling(Player player);
+
+    /**
      * Checks if the given player is an outlaw
      *
      * @param player to check

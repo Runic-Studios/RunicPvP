@@ -14,11 +14,13 @@ import org.bukkit.event.Listener;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @SuppressWarnings("deprecation")
 public class DuelManager implements Listener {
     private final HashSet<DuelRequest> duelRequests = new HashSet<>();
     private final HashSet<Duel> currentDuels = new HashSet<>();
+    private final HashSet<UUID> countdownSet = new HashSet<>();
 
     public DuelManager() {
         RunicPvP.inst().getServer().getPluginManager().registerEvents(this, RunicPvP.inst());
@@ -57,6 +59,10 @@ public class DuelManager implements Listener {
                 duel.endDuel(IDuel.DuelResult.FORFEIT);
             }
         }
+    }
+
+    public HashSet<UUID> getCountdownSet() {
+        return countdownSet;
     }
 
     public Set<Duel> getCurrentDuels() {
