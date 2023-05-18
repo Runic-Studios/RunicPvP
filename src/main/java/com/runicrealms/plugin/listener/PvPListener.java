@@ -28,8 +28,18 @@ public class PvPListener implements Listener {
     public void onAllyVerify(AllyVerifyEvent event) {
         if (!(event.getRecipient() instanceof Player recipient)) return;
         if (event.getRecipient().equals(event.getCaster())) return; // caster healed itself
-        if (RunicPvP.getAPI().playersCanFight(event.getCaster(), recipient))
+        // If combat is an option, these are not allies
+        if (RunicPvP.getAPI().playersCanFight(event.getCaster(), recipient)) {
             event.setCancelled(true);
+            return;
+        }
+        // If the caster or recipient is an outlaw, cancel event if players not in party
+        if (RunicPvP.getAPI().isOutlaw(event.getCaster(), RunicCore.getCharacterAPI().getCharacterSlot(event.getCaster().getUniqueId()))
+                || RunicPvP.getAPI().isOutlaw(recipient, RunicCore.getCharacterAPI().getCharacterSlot(recipient.getUniqueId()))) {
+            if (!RunicCore.getPartyAPI().isPartyMember(event.getCaster().getUniqueId(), recipient)) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     /**
