@@ -1,7 +1,12 @@
 package com.runicrealms.plugin.command;
 
-import com.runicrealms.libs.acf.BaseCommand;
-import com.runicrealms.libs.acf.annotation.*;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.Conditions;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.duel.Duel;

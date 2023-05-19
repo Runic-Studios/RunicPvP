@@ -9,6 +9,10 @@ version = "1.0-SNAPSHOT"
 dependencies {
     compileOnly(commonLibs.paper)
     compileOnly(commonLibs.mythicmobs)
+    compileOnly(commonLibs.acf)
+    compileOnly(commonLibs.taskchain)
+    compileOnly(commonLibs.springdatamongodb)
+    compileOnly(commonLibs.jedis)
     compileOnly(project(":Projects:Core"))
     compileOnly(project(":Projects:Items"))
     compileOnly(project(":Projects:Professions"))
