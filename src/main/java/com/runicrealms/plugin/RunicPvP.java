@@ -12,6 +12,7 @@ import com.runicrealms.plugin.listener.NameTagListener;
 import com.runicrealms.plugin.listener.OutlawExpListener;
 import com.runicrealms.plugin.listener.PartyListener;
 import com.runicrealms.plugin.listener.PvPListener;
+import com.runicrealms.plugin.listener.ScoreboardListener;
 import com.runicrealms.plugin.model.MongoTask;
 import com.runicrealms.plugin.shop.PvPShopFactory;
 import org.bukkit.Bukkit;
