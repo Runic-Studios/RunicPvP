@@ -18,6 +18,8 @@ dependencies {
     compileOnly(project(":Projects:Core"))
     compileOnly(project(":Projects:Items"))
     compileOnly(project(":Projects:Professions"))
+    compileOnly(project(":Projects:Common"))
+    compileOnly(project(":Projects:Database"))
     compileOnly(commonLibs.holographicdisplays)
 }
 

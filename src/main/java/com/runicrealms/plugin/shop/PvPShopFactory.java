@@ -1,10 +1,10 @@
 package com.runicrealms.plugin.shop;
 
 import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.common.util.ChatUtils;
 import com.runicrealms.plugin.item.shops.RunicItemRunnable;
 import com.runicrealms.plugin.item.shops.RunicShopGeneric;
 import com.runicrealms.plugin.item.shops.RunicShopItem;
-import com.runicrealms.plugin.utilities.ChatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

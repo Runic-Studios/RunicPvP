@@ -3,13 +3,14 @@ package com.runicrealms.plugin;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainAbortAction;
 import com.runicrealms.plugin.api.RunicPvPAPI;
-import com.runicrealms.plugin.character.api.CharacterDeleteEvent;
-import com.runicrealms.plugin.character.api.CharacterQuitEvent;
-import com.runicrealms.plugin.character.api.CharacterSelectEvent;
-import com.runicrealms.plugin.database.event.MongoSaveEvent;
-import com.runicrealms.plugin.model.CharacterField;
 import com.runicrealms.plugin.model.OutlawData;
 import com.runicrealms.plugin.model.PvpData;
+import com.runicrealms.plugin.rdb.RunicDatabase;
+import com.runicrealms.plugin.rdb.event.CharacterDeleteEvent;
+import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
+import com.runicrealms.plugin.rdb.event.CharacterSelectEvent;
+import com.runicrealms.plugin.rdb.event.MongoSaveEvent;
+import com.runicrealms.plugin.rdb.model.CharacterField;
 import com.runicrealms.plugin.utilities.NametagHandler;
 import com.runicrealms.runicitems.RunicItems;
 import org.bson.types.ObjectId;
@@ -77,17 +78,17 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
 
     @Override
     public PvpData loadPvpData(UUID uuid, int slotToLoad) {
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
             // Step 1: Check if inventory data is cached in redis
-            Set<String> redisPvpList = RunicCore.getRedisAPI().getRedisDataSet(uuid, "pvpData", jedis);
-            boolean dataInRedis = RunicCore.getRedisAPI().determineIfDataInRedis(redisPvpList, slotToLoad);
+            Set<String> redisPvpList = RunicDatabase.getAPI().getRedisAPI().getRedisDataSet(uuid, "pvpData", jedis);
+            boolean dataInRedis = RunicDatabase.getAPI().getRedisAPI().determineIfDataInRedis(redisPvpList, slotToLoad);
             if (dataInRedis) {
                 return new PvpData(uuid, jedis, slotToLoad);
             }
             // Step 2: Check the mongo database
             Query query = new Query();
             query.addCriteria(Criteria.where(CharacterField.PLAYER_UUID.getField()).is(uuid));
-            MongoTemplate mongoTemplate = RunicCore.getDataAPI().getMongoTemplate();
+            MongoTemplate mongoTemplate = RunicDatabase.getAPI().getDataAPI().getMongoTemplate();
             PvpData result = mongoTemplate.findOne(query, PvpData.class);
             if (result != null) {
                 // Handles case where there is data for the player, but not this character
@@ -113,8 +114,8 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
     @Override
     public boolean playersCanFight(Player player, Player victim) {
         if (RunicCore.getPartyAPI().isPartyMember(player.getUniqueId(), victim)) return false;
-        int slotPlayer = RunicCore.getCharacterAPI().getCharacterSlot(player.getUniqueId());
-        int slotVictim = RunicCore.getCharacterAPI().getCharacterSlot(victim.getUniqueId());
+        int slotPlayer = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
+        int slotVictim = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(victim.getUniqueId());
         boolean bothOutlaws = RunicPvP.getAPI().isOutlaw(player, slotPlayer) && RunicPvP.getAPI().isOutlaw(victim, slotVictim);
         boolean areDueling = RunicPvP.getAPI().areDueling(player, victim);
         boolean damagerInSafezone = RunicCore.getRegionAPI().isSafezone(player.getLocation());
@@ -140,7 +141,7 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
             return;
         }
         UUID uuid = player.getUniqueId();
-        int slot = RunicCore.getCharacterAPI().getCharacterSlot(uuid);
+        int slot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(uuid);
         // Toggle their current outlaw status from whatever it currently is
         boolean isOutlaw = isOutlaw(player, slot);
         this.pvpDataMap.get(player.getUniqueId()).getOutlawDataMap().get(slot).setOutlaw(!isOutlaw);
@@ -150,7 +151,7 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
         TaskChain<?> chain = RunicItems.newChain();
         chain
                 .asyncFirst(() -> {
-                            try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+                            try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
                                 this.pvpDataMap.get(uuid).getOutlawDataMap().get(slot).writeToJedis(uuid, jedis, slot);
                                 return null;
                             }
@@ -171,13 +172,13 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
         UUID uuid = player.getUniqueId();
         int slot = event.getSlot();
         // Removes player from the save task
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
-            String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
+            String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
             jedis.srem(database + ":markedForSave:pvp", String.valueOf(player.getUniqueId()));
         }
         // 1. Delete from Redis
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
             jedis.srem(database + ":" + uuid + ":pvpData", String.valueOf(slot));
         }
         // 2. Delete from Mongo
@@ -185,7 +186,7 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
         query.addCriteria(Criteria.where(CharacterField.PLAYER_UUID.getField()).is(uuid));
         Update update = new Update();
         update.unset("outlawDataMap." + slot);
-        MongoTemplate mongoTemplate = RunicCore.getDataAPI().getMongoTemplate();
+        MongoTemplate mongoTemplate = RunicDatabase.getAPI().getDataAPI().getMongoTemplate();
         mongoTemplate.updateFirst(query, update, PvpData.class);
         // 3. Mark this deletion as complete
         event.getPluginsToDeleteData().remove("pvp");

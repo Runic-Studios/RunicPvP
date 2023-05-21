@@ -1,8 +1,8 @@
 package com.runicrealms.plugin.duel;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.command.CMDDuel;
+import com.runicrealms.plugin.rdb.RunicDatabase;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -53,11 +53,11 @@ public class DuelRequest implements IDuelRequest {
                     RunicPvP.getDuelManager().getCountdownSet().remove(challenger.getUniqueId());
                     RunicPvP.getDuelManager().getCountdownSet().remove(defender.getUniqueId());
                     this.cancel();
-                    if (!RunicCore.getCharacterAPI().getLoadedCharacters().contains(challenger.getUniqueId())) { // challenger quits
+                    if (!RunicDatabase.getAPI().getCharacterAPI().getLoadedCharacters().contains(challenger.getUniqueId())) { // challenger quits
                         duel.setDuelResult(IDuel.DuelResult.DEFEAT);
                         duel.endDuel(duel.getDuelResult());
                     }
-                    if (!RunicCore.getCharacterAPI().getLoadedCharacters().contains(defender.getUniqueId())) { // defender quits
+                    if (!RunicDatabase.getAPI().getCharacterAPI().getLoadedCharacters().contains(defender.getUniqueId())) { // defender quits
                         duel.setDuelResult(IDuel.DuelResult.VICTORY);
                         duel.endDuel(duel.getDuelResult());
                     }
