@@ -4,13 +4,14 @@ import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.api.event.AllyVerifyEvent;
 import com.runicrealms.plugin.api.event.RunicPvPEvent;
-import com.runicrealms.plugin.character.api.CharacterQuitEvent;
 import com.runicrealms.plugin.events.EnemyVerifyEvent;
 import com.runicrealms.plugin.events.EnterCombatEvent;
 import com.runicrealms.plugin.events.LeaveCombatEvent;
 import com.runicrealms.plugin.events.MagicDamageEvent;
 import com.runicrealms.plugin.events.PhysicalDamageEvent;
 import com.runicrealms.plugin.events.RunicDeathEvent;
+import com.runicrealms.plugin.rdb.RunicDatabase;
+import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -39,8 +40,8 @@ public class PvPListener implements Listener {
             return;
         }
         // If the caster or recipient is an outlaw, cancel event if players not in party
-        if (RunicPvP.getAPI().isOutlaw(event.getCaster(), RunicCore.getCharacterAPI().getCharacterSlot(event.getCaster().getUniqueId()))
-                || RunicPvP.getAPI().isOutlaw(recipient, RunicCore.getCharacterAPI().getCharacterSlot(recipient.getUniqueId()))) {
+        if (RunicPvP.getAPI().isOutlaw(event.getCaster(), RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getCaster().getUniqueId()))
+                || RunicPvP.getAPI().isOutlaw(recipient, RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(recipient.getUniqueId()))) {
             if (!RunicCore.getPartyAPI().isPartyMember(event.getCaster().getUniqueId(), recipient)) {
                 event.setCancelled(true);
             }
@@ -54,8 +55,8 @@ public class PvPListener implements Listener {
     public void onEnemyVerify(EnemyVerifyEvent event) {
         if (!(event.getVictim() instanceof Player victim)) return;
         Player caster = event.getCaster();
-        int slotCaster = RunicCore.getCharacterAPI().getCharacterSlot(caster.getUniqueId());
-        int slotVictim = RunicCore.getCharacterAPI().getCharacterSlot(victim.getUniqueId());
+        int slotCaster = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(caster.getUniqueId());
+        int slotVictim = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(victim.getUniqueId());
         boolean isOutlawCaster = RunicPvP.getAPI().isOutlaw(caster, slotCaster);
         boolean isOutlawVictim = RunicPvP.getAPI().isOutlaw(victim, slotVictim);
         if (!( // Negation

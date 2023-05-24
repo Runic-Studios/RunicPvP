@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.model;
 
-import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.rdb.RunicDatabase;
+import com.runicrealms.plugin.rdb.model.SessionDataMongo;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -41,10 +42,10 @@ public class PvpData implements SessionDataMongo {
      */
     public PvpData(UUID uuid, Jedis jedis, int slotToLoad) {
         this.uuid = uuid;
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         if (slotToLoad == -1) { // Load all slots
             // Load OutlawData from Redis
-            for (int slot = 1; slot <= RunicCore.getDataAPI().getMaxCharacterSlot(); slot++) {
+            for (int slot = 1; slot <= RunicDatabase.getAPI().getDataAPI().getMaxCharacterSlot(); slot++) {
                 // No data for slot
                 if (!jedis.smembers(database + ":" + uuid + ":pvpData").contains(String.valueOf(slot)))
                     continue;
@@ -63,7 +64,7 @@ public class PvpData implements SessionDataMongo {
     @SuppressWarnings("unchecked")
     @Override
     public PvpData addDocumentToMongo() {
-        MongoTemplate mongoTemplate = RunicCore.getDataAPI().getMongoTemplate();
+        MongoTemplate mongoTemplate = RunicDatabase.getAPI().getDataAPI().getMongoTemplate();
         return mongoTemplate.save(this);
     }
 
@@ -92,15 +93,15 @@ public class PvpData implements SessionDataMongo {
     }
 
     public void writeToJedis() {
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
-            String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
+            String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
             // Inform the server that this player should be saved to mongo on next task (jedis data is refreshed)
             jedis.sadd(database + ":" + "markedForSave:pvp", this.uuid.toString());
             // Save outlaw data
             for (int slot : this.outlawDataMap.keySet()) {
                 // Ensure the system knows that there is data in redis
                 jedis.sadd(database + ":" + this.uuid + ":pvpData", String.valueOf(slot));
-                jedis.expire(database + ":" + this.uuid + ":pvpData", RunicCore.getRedisAPI().getExpireTime());
+                jedis.expire(database + ":" + this.uuid + ":pvpData", RunicDatabase.getAPI().getRedisAPI().getExpireTime());
                 OutlawData outlawData = this.outlawDataMap.get(slot);
                 outlawData.writeToJedis(this.uuid, jedis, slot);
             }

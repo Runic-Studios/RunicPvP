@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.model;
 
-import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.rdb.RunicDatabase;
+import com.runicrealms.plugin.rdb.model.SessionDataRedis;
 import org.bukkit.Bukkit;
 import redis.clients.jedis.Jedis;
 
@@ -24,7 +25,7 @@ public class OutlawData implements SessionDataRedis {
      */
     public OutlawData(UUID uuid, Jedis jedis, int slot) {
         try {
-            String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+            String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
             boolean isOutlaw = Boolean.parseBoolean(jedis.get(database + ":" + getJedisKey(uuid, slot) + ":toggled"));
             this.setOutlaw(isOutlaw);
         } catch (Exception ex) {
@@ -59,9 +60,9 @@ public class OutlawData implements SessionDataRedis {
 
     @Override
     public void writeToJedis(UUID uuid, Jedis jedis, int... slot) {
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         jedis.set(database + ":" + getJedisKey(uuid, slot[0]) + ":toggled", String.valueOf(this.isOutlaw));
-        jedis.expire(database + ":" + getJedisKey(uuid, slot[0]) + ":toggled", RunicCore.getRedisAPI().getExpireTime());
+        jedis.expire(database + ":" + getJedisKey(uuid, slot[0]) + ":toggled", RunicDatabase.getAPI().getRedisAPI().getExpireTime());
     }
 
     public boolean isOutlaw() {

@@ -2,8 +2,17 @@ name: RunicPvP
 version: ${project.version}
 main: com.runicrealms.plugin.RunicPvP
 api-version: 1.15
-authors: [Skyfallin]
-softdepend: [HolographicDisplays, RunicCore]
+authors: [ Skyfallin ]
+depend:
+  - MythicMobs
+  - HolographicDisplays
+  - RunicCore
+  - RunicChat
+  - RunicItems
+  - RunicNpcs
+  - RunicRestart
+  - RunicCommon
+  - RunicDatabase
 commands:
   duel:
     usage: /<commands>
