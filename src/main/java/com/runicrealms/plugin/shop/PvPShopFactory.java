@@ -13,10 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 
 public class PvPShopFactory {
 
@@ -44,11 +41,8 @@ public class PvPShopFactory {
     }
 
     private void loadOutlawToggleShop() {
-        LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();
-        Map<String, Integer> requiredItems = new HashMap<>() {{
-            put("coin", 0);
-        }};
-        shopItems.add(new RunicShopItem(requiredItems, iconWithLore(toggleOutlawIcon()), runShopBuy()));
+        ArrayList<RunicShopItem> shopItems = new ArrayList<>();
+        shopItems.add(new RunicShopItem(0, iconWithLore(toggleOutlawIcon()), runShopBuy()));
         new RunicShopGeneric(9, ChatColor.YELLOW + "Head Outlaw Garrett", Arrays.asList(55, 56), shopItems);
     }
 
