@@ -10,6 +10,7 @@ import com.runicrealms.plugin.events.LeaveCombatEvent;
 import com.runicrealms.plugin.events.MagicDamageEvent;
 import com.runicrealms.plugin.events.PhysicalDamageEvent;
 import com.runicrealms.plugin.events.RunicDeathEvent;
+import com.runicrealms.plugin.player.CombatManager;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
 import org.bukkit.Bukkit;
@@ -77,7 +78,7 @@ public class PvPListener implements Listener {
     @EventHandler
     public void onPvPCombat(RunicPvPEvent event) {
         if (event.isCancelled()) return;
-        EnterCombatEvent.tagPlayerAndPartyInCombat(event.getVictim()); // player is tagged in parent event
+        EnterCombatEvent.tagPlayerAndPartyInCombat(event.getVictim(), CombatManager.CombatType.PLAYER); // Player is tagged in parent event
         if (!playersFightingPlayers.containsKey(event.getPlayer().getUniqueId())) {
             event.getPlayer().sendMessage(ChatColor.DARK_RED + "You have entered PvP combat! Logging out counts as death!");
         }
@@ -109,8 +110,8 @@ public class PvPListener implements Listener {
             if (RunicPvP.getAPI().canCreatePvPEvent(event.getPlayer(), victim)) {
                 Bukkit.getPluginManager().callEvent(new RunicPvPEvent(event.getPlayer(), victim));
             } else {
-                Bukkit.getPluginManager().callEvent(new EnterCombatEvent(event.getPlayer()));
-                Bukkit.getPluginManager().callEvent(new EnterCombatEvent(victim));
+                Bukkit.getPluginManager().callEvent(new EnterCombatEvent(event.getPlayer(), CombatManager.CombatType.PLAYER));
+                Bukkit.getPluginManager().callEvent(new EnterCombatEvent(victim, CombatManager.CombatType.PLAYER));
             }
         }
     }
@@ -127,8 +128,8 @@ public class PvPListener implements Listener {
             if (RunicPvP.getAPI().canCreatePvPEvent(event.getPlayer(), victim)) {
                 Bukkit.getPluginManager().callEvent(new RunicPvPEvent(event.getPlayer(), victim));
             } else {
-                Bukkit.getPluginManager().callEvent(new EnterCombatEvent(event.getPlayer()));
-                Bukkit.getPluginManager().callEvent(new EnterCombatEvent(victim));
+                Bukkit.getPluginManager().callEvent(new EnterCombatEvent(event.getPlayer(), CombatManager.CombatType.PLAYER));
+                Bukkit.getPluginManager().callEvent(new EnterCombatEvent(victim, CombatManager.CombatType.PLAYER));
             }
         }
     }
