@@ -1,5 +1,7 @@
 package com.runicrealms.plugin.listener;
 
+import com.runicrealms.plugin.CityLocation;
+import com.runicrealms.plugin.DungeonLocation;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.api.event.AllyVerifyEvent;
@@ -11,10 +13,12 @@ import com.runicrealms.plugin.events.MagicDamageEvent;
 import com.runicrealms.plugin.events.PhysicalDamageEvent;
 import com.runicrealms.plugin.events.RunicDeathEvent;
 import com.runicrealms.plugin.player.CombatManager;
+import com.runicrealms.plugin.player.listener.ManaListener;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -94,6 +98,21 @@ public class PvPListener implements Listener {
         if (!playersFightingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
         Player combatLogger = event.getPlayer();
         Player lastPlayerWhoTheyFought = Bukkit.getPlayer(playersFightingPlayers.get(combatLogger.getUniqueId()));
+        
+        // Reset (this needs to be called here on CharacterQuitEvent as well as in runicdeathevent since this event is async)
+        DungeonLocation dungeonLocation = null;
+        if (combatLogger.getWorld().getName().equalsIgnoreCase("dungeons")) {
+            dungeonLocation = RunicCore.getRegionAPI().getDungeonFromLocation(combatLogger.getLocation());
+        }
+        if (dungeonLocation != null) {
+            combatLogger.teleport(dungeonLocation.getLocation());
+        } else {
+            combatLogger.teleport(CityLocation.getLocationFromItemStack(combatLogger.getInventory().getItem(8)));
+        }
+        combatLogger.setHealth(combatLogger.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        combatLogger.setFoodLevel(20);
+        ManaListener.calculateMaxMana(combatLogger);
+
         RunicDeathEvent runicDeathEvent = new RunicDeathEvent(combatLogger, combatLogger.getLocation(), lastPlayerWhoTheyFought);
         Bukkit.getScheduler().runTask(RunicPvP.inst(), () -> Bukkit.getPluginManager().callEvent(runicDeathEvent)); // Sync
     }
