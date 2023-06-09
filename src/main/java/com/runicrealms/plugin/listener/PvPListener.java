@@ -18,6 +18,7 @@ import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -98,17 +99,15 @@ public class PvPListener implements Listener {
         if (!playersFightingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
         Player combatLogger = event.getPlayer();
         Player lastPlayerWhoTheyFought = Bukkit.getPlayer(playersFightingPlayers.get(combatLogger.getUniqueId()));
-        
+
         // Reset (this needs to be called here on CharacterQuitEvent as well as in runicdeathevent since this event is async)
         DungeonLocation dungeonLocation = null;
         if (combatLogger.getWorld().getName().equalsIgnoreCase("dungeons")) {
             dungeonLocation = RunicCore.getRegionAPI().getDungeonFromLocation(combatLogger.getLocation());
         }
-        if (dungeonLocation != null) {
-            combatLogger.teleport(dungeonLocation.getLocation());
-        } else {
-            combatLogger.teleport(CityLocation.getLocationFromItemStack(combatLogger.getInventory().getItem(8)));
-        }
+        Location location = dungeonLocation != null ? dungeonLocation.getLocation() : CityLocation.getLocationFromItemStack(combatLogger.getInventory().getItem(8));
+        event.getPlayer().teleport(location);
+        RunicCore.getPlayerDataAPI().getCorePlayerData(event.getPlayer().getUniqueId()).getCharacter(event.getSlot()).setLocation(location);
         combatLogger.setHealth(combatLogger.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         combatLogger.setFoodLevel(20);
         ManaListener.calculateMaxMana(combatLogger);
