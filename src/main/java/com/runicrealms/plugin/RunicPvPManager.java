@@ -172,13 +172,10 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
         UUID uuid = player.getUniqueId();
         int slot = event.getSlot();
         // Removes player from the save task
-        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
-            String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
-            jedis.srem(database + ":markedForSave:pvp", String.valueOf(player.getUniqueId()));
-        }
         // 1. Delete from Redis
         String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
+            jedis.srem(database + ":markedForSave:pvp", String.valueOf(player.getUniqueId()));
             jedis.srem(database + ":" + uuid + ":pvpData", String.valueOf(slot));
         }
         // 2. Delete from Mongo
