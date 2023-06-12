@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.api;
 
-import com.runicrealms.plugin.model.PvpData;
+import com.runicrealms.plugin.PvPData;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -55,7 +55,7 @@ public interface RunicPvPAPI {
      * @param slotToLoad of the character (-1 to load all slots, used for mongo task)
      * @return a future, which at some point will retrieve their data from redis
      */
-    PvpData loadPvpData(UUID uuid, int slotToLoad);
+    PvPData loadPvpData(UUID uuid);
 
     /**
      * Checks whether two players are allowed to hit each other.

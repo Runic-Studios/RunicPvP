@@ -13,7 +13,6 @@ import com.runicrealms.plugin.listener.OutlawExpListener;
 import com.runicrealms.plugin.listener.PartyListener;
 import com.runicrealms.plugin.listener.PvPListener;
 import com.runicrealms.plugin.listener.ScoreboardListener;
-import com.runicrealms.plugin.model.MongoTask;
 import com.runicrealms.plugin.shop.PvPShopFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,7 +29,6 @@ public final class RunicPvP extends JavaPlugin {
     private static DuelManager duelManager;
     private static PaperCommandManager commandManager;
     private static RunicPvPManager runicPvPManager;
-    private static MongoTask mongoTask;
 
     /*
     Getters for Plugin and managers
@@ -59,10 +57,6 @@ public final class RunicPvP extends JavaPlugin {
         return runicPvPManager;
     }
 
-    public static MongoTask getMongoTask() {
-        return mongoTask;
-    }
-
     public static <T> TaskChain<T> newChain() {
         return taskChainFactory.newChain();
     }
@@ -78,7 +72,6 @@ public final class RunicPvP extends JavaPlugin {
         duelManager = null;
         commandManager = null;
         runicPvPManager = null;
-        mongoTask = null;
         taskChainFactory = null;
     }
 
@@ -89,7 +82,6 @@ public final class RunicPvP extends JavaPlugin {
         runicPvPManager = new RunicPvPManager(); // initialize API
         conquestManager = new ConquestManager();
         duelManager = new DuelManager();
-        mongoTask = new MongoTask();
         Bukkit.getServer().getPluginManager().registerEvents(new PvPListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new OutlawExpListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ScoreboardListener(), this);
