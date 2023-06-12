@@ -18,6 +18,7 @@ public class OutlawExpListener implements Listener {
         if (!RunicPvP.getAPI().isOutlaw(event.getPlayer(), slot)) return;
         if (event.isCancelled()) return;
         if (event.getRunicExpSource() != RunicCombatExpEvent.RunicExpSource.MOB) return; // only mobs
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase("dungeons")) return; // no outlaw bonus in dungeons
         event.setBonus(RunicCombatExpEvent.BonusType.OUTLAW, RunicPvP.getOutlawBonusExpPercent());
     }
 }
