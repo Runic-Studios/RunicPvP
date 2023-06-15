@@ -65,6 +65,9 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
 
     @Override
     public boolean playersCanFight(Player player, Player victim) {
+        // No combat in dungeon world
+        if (player.getWorld().getName().equalsIgnoreCase("dungeons") || victim.getWorld().getName().equalsIgnoreCase("dungeons"))
+            return false;
         if (RunicCore.getPartyAPI().isPartyMember(player.getUniqueId(), victim)) return false;
         int slotPlayer = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
         int slotVictim = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(victim.getUniqueId());
