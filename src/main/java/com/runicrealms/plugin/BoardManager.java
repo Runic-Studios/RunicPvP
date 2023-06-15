@@ -1,7 +1,8 @@
 package com.runicrealms.plugin;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,14 +17,14 @@ public class BoardManager {
     public BoardManager() {
         // azana
         Location locAzana = new Location(Bukkit.getWorld("Alterra"), -760.5, 38.5, 121.5);
-        Hologram azanaHologram = HologramsAPI.createHologram(RunicPvP.inst(), locAzana);
-        azanaHologram.getVisibilityManager().setVisibleByDefault(true);
-        azanaHologram.appendTextLine(BOARD_TITLE);
+        Hologram azanaHologram = HolographicDisplaysAPI.get(RunicPvP.inst()).createHologram(locAzana);
+        azanaHologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.VISIBLE);
+        azanaHologram.getLines().appendText(BOARD_TITLE);
         // dmr
         Location locDMR = new Location(Bukkit.getWorld("Alterra"), -12.5, 34.5, -550.5);
-        Hologram deadMansHologram = HologramsAPI.createHologram(RunicPvP.inst(), locDMR);
-        deadMansHologram.getVisibilityManager().setVisibleByDefault(true);
-        deadMansHologram.appendTextLine(BOARD_TITLE);
+        Hologram deadMansHologram = HolographicDisplaysAPI.get(RunicPvP.inst()).createHologram(locDMR);
+        deadMansHologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.VISIBLE);
+        deadMansHologram.getLines().appendText(BOARD_TITLE);
         // task
         Bukkit.getScheduler().scheduleSyncRepeatingTask(RunicPvP.inst(),
                 () -> {

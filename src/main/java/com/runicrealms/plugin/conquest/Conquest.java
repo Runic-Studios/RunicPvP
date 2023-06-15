@@ -2,7 +2,7 @@ package com.runicrealms.plugin.conquest;
 
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.item.lootchests.LootChest;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.lumine.mythic.api.mobs.MythicMob;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
