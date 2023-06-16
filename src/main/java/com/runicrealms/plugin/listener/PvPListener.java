@@ -5,12 +5,7 @@ import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.api.event.AllyVerifyEvent;
 import com.runicrealms.plugin.api.event.RunicPvPEvent;
-import com.runicrealms.plugin.events.EnemyVerifyEvent;
-import com.runicrealms.plugin.events.EnterCombatEvent;
-import com.runicrealms.plugin.events.LeaveCombatEvent;
-import com.runicrealms.plugin.events.MagicDamageEvent;
-import com.runicrealms.plugin.events.PhysicalDamageEvent;
-import com.runicrealms.plugin.events.RunicDeathEvent;
+import com.runicrealms.plugin.events.*;
 import com.runicrealms.plugin.player.CombatManager;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.Bukkit;
@@ -103,7 +98,7 @@ public class PvPListener implements Listener {
             combatLogger.teleport(location);
         }
         RunicDeathEvent runicDeathEvent = new RunicDeathEvent(combatLogger, fromLogout, lastPlayerWhoTheyFought);
-        Bukkit.getScheduler().runTask(RunicPvP.inst(), () -> Bukkit.getPluginManager().callEvent(runicDeathEvent)); // Sync
+        Bukkit.getPluginManager().callEvent(runicDeathEvent);
     }
 
     /**
