@@ -1,8 +1,8 @@
 package com.runicrealms.plugin.listener;
 
-import com.runicrealms.plugin.CityLocation;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.SafeZoneLocation;
 import com.runicrealms.plugin.api.event.AllyVerifyEvent;
 import com.runicrealms.plugin.api.event.RunicPvPEvent;
 import com.runicrealms.plugin.events.EnemyVerifyEvent;
@@ -98,7 +98,7 @@ public class PvPListener implements Listener {
         Player lastPlayerWhoTheyFought = Bukkit.getPlayer(playersFightingPlayers.get(combatLogger.getUniqueId()));
         // Teleport player to their inn if they combat log
         Location fromLogout = combatLogger.getLocation();
-        Location location = CityLocation.getLocationFromItemStack(combatLogger.getInventory().getItem(8));
+        Location location = SafeZoneLocation.getLocationFromItemStack(combatLogger.getInventory().getItem(8));
         if (location != null) {
             combatLogger.teleport(location);
         }
