@@ -1,6 +1,6 @@
-package com.runicrealms.plugin.shop;
+package com.runicrealms.plugin.pvp.shop;
 
-import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.common.util.ChatUtils;
 import com.runicrealms.plugin.item.shops.RunicItemRunnable;
 import com.runicrealms.plugin.item.shops.RunicShopGeneric;

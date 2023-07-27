@@ -1,6 +1,7 @@
-package com.runicrealms.plugin;
+package com.runicrealms.plugin.pvp;
 
-import com.runicrealms.plugin.api.RunicPvPAPI;
+import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.pvp.api.RunicPvPAPI;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.rdb.event.CharacterDeleteEvent;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;

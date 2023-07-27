@@ -1,4 +1,4 @@
-package com.runicrealms.plugin;
+package com.runicrealms.plugin.pvp;
 
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;

@@ -1,7 +1,7 @@
-package com.runicrealms.plugin.duel;
+package com.runicrealms.plugin.pvp.duel;
 
-import com.runicrealms.plugin.RunicPvP;
-import com.runicrealms.plugin.command.CMDDuel;
+import com.runicrealms.plugin.pvp.RunicPvP;
+import com.runicrealms.plugin.pvp.command.CMDDuel;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;

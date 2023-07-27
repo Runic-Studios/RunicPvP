@@ -1,10 +1,10 @@
-package com.runicrealms.plugin.listener;
+package com.runicrealms.plugin.pvp.listener;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.SafeZoneLocation;
 import com.runicrealms.plugin.api.event.AllyVerifyEvent;
-import com.runicrealms.plugin.api.event.RunicPvPEvent;
+import com.runicrealms.plugin.pvp.api.event.RunicPvPEvent;
 import com.runicrealms.plugin.events.EnemyVerifyEvent;
 import com.runicrealms.plugin.events.EnterCombatEvent;
 import com.runicrealms.plugin.events.LeaveCombatEvent;

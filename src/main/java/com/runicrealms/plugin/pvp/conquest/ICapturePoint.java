@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.conquest;
+package com.runicrealms.plugin.pvp.conquest;
 
 import com.runicrealms.plugin.party.Party;
 import org.bukkit.Location;

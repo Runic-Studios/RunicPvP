@@ -1,6 +1,6 @@
-package com.runicrealms.plugin.listener;
+package com.runicrealms.plugin.pvp.listener;
 
-import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.events.RunicCombatExpEvent;
 import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.rdb.RunicDatabase;

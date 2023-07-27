@@ -1,6 +1,6 @@
-package com.runicrealms.plugin.api;
+package com.runicrealms.plugin.pvp.api;
 
-import com.runicrealms.plugin.PvPData;
+import com.runicrealms.plugin.pvp.PvPData;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

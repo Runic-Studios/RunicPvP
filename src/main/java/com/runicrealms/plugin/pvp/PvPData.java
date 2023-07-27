@@ -1,4 +1,4 @@
-package com.runicrealms.plugin;
+package com.runicrealms.plugin.pvp;
 
 import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.rdb.RunicDatabase;

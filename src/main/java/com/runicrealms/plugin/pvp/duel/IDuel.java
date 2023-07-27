@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.duel;
+package com.runicrealms.plugin.pvp.duel;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

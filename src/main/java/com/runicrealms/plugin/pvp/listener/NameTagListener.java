@@ -1,6 +1,6 @@
-package com.runicrealms.plugin.listener;
+package com.runicrealms.plugin.pvp.listener;
 
-import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.api.event.NameTagEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;

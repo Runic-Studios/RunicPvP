@@ -1,7 +1,7 @@
-package com.runicrealms.plugin.duel;
+package com.runicrealms.plugin.pvp.duel;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.events.RunicDeathEvent;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
 import org.bukkit.Bukkit;
