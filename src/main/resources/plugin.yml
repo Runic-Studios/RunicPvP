@@ -1,6 +1,6 @@
 name: RunicPvP
 version: ${project.version}
-main: com.runicrealms.plugin.RunicPvP
+main: com.runicrealms.plugin.pvp.RunicPvP
 api-version: 1.15
 authors: [ Skyfallin ]
 depend:

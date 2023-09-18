@@ -1,8 +1,8 @@
-package com.runicrealms.plugin.duel;
+package com.runicrealms.plugin.pvp.duel;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicPvP;
 import com.runicrealms.plugin.events.RunicDeathEvent;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -117,8 +117,8 @@ public class DuelManager implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST) // Runs first to cancel event
     public void onRunicDeath(RunicDeathEvent event) {
-        if (event.getKiller().length <= 0) return;
-        if (!(event.getKiller()[0] instanceof Player killer)) return;
+        if (event.getKiller() == null) return;
+        if (!(event.getKiller() instanceof Player killer)) return;
         for (Duel duel : getCurrentDuels()) {
             if (event.getVictim().equals(duel.getChallenger()) || event.getVictim().equals(duel.getDefender())) {
                 event.setCancelled(true);

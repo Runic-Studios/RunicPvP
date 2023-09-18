@@ -1,6 +1,6 @@
-package com.runicrealms.plugin.listener;
+package com.runicrealms.plugin.pvp.listener;
 
-import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.api.event.ScoreboardUpdateEvent;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.event.EventHandler;

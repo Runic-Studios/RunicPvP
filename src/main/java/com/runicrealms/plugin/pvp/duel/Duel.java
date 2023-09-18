@@ -1,7 +1,7 @@
-package com.runicrealms.plugin.duel;
+package com.runicrealms.plugin.pvp.duel;
 
-import com.runicrealms.plugin.RunicPvP;
-import com.runicrealms.plugin.command.CMDDuel;
+import com.runicrealms.plugin.pvp.RunicPvP;
+import com.runicrealms.plugin.pvp.command.CMDDuel;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;

@@ -1,7 +1,7 @@
-package com.runicrealms.plugin.conquest;
+package com.runicrealms.plugin.pvp.conquest;
 
-import com.runicrealms.plugin.item.lootchests.LootChest;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import com.runicrealms.plugin.loot.chest.LootChest;
+import io.lumine.mythic.api.mobs.MythicMob;
 
 public enum ConquestEnum {
 

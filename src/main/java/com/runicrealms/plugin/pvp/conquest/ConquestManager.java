@@ -1,6 +1,6 @@
-package com.runicrealms.plugin.conquest;
+package com.runicrealms.plugin.pvp.conquest;
 
-import com.runicrealms.plugin.RunicPvP;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;

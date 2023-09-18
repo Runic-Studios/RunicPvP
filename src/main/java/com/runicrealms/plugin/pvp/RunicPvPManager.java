@@ -1,6 +1,7 @@
-package com.runicrealms.plugin;
+package com.runicrealms.plugin.pvp;
 
-import com.runicrealms.plugin.api.RunicPvPAPI;
+import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.pvp.api.RunicPvPAPI;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.rdb.event.CharacterDeleteEvent;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
@@ -16,6 +17,7 @@ import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Implementation of API class
@@ -106,7 +108,14 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onCharacterDelete(CharacterDeleteEvent event) {
-        pvpDataMap.get(event.getPlayer().getUniqueId()).setOutlawEnabled(event.getSlot(), false);
+        PvPData data = pvpDataMap.get(event.getPlayer().getUniqueId());
+
+        if (data == null) {
+            RunicPvP.inst().getLogger().log(Level.SEVERE, "There was an error getting " + event.getPlayer().getName() + "'s pvp data from the cache!");
+            return;
+        }
+
+        data.setOutlawEnabled(event.getSlot(), false);
     }
 
     @EventHandler(priority = EventPriority.LOW)

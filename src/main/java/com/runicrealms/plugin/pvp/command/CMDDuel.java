@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.command;
+package com.runicrealms.plugin.pvp.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -8,10 +8,10 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicPvP;
-import com.runicrealms.plugin.duel.Duel;
-import com.runicrealms.plugin.duel.DuelRequest;
-import com.runicrealms.plugin.duel.IDuelRequest;
+import com.runicrealms.plugin.pvp.RunicPvP;
+import com.runicrealms.plugin.pvp.duel.Duel;
+import com.runicrealms.plugin.pvp.duel.DuelRequest;
+import com.runicrealms.plugin.pvp.duel.IDuelRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
