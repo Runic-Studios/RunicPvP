@@ -2,6 +2,7 @@ package com.runicrealms.plugin.pvp.duel;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.events.RunicDeathEvent;
+import com.runicrealms.plugin.events.SpellHealEvent;
 import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
 import org.bukkit.Bukkit;
@@ -16,7 +17,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@SuppressWarnings("deprecation")
 public class DuelManager implements Listener {
     private final HashSet<DuelRequest> duelRequests = new HashSet<>();
     private final HashSet<Duel> currentDuels = new HashSet<>();
@@ -24,8 +24,8 @@ public class DuelManager implements Listener {
 
     public DuelManager() {
         RunicPvP.inst().getServer().getPluginManager().registerEvents(this, RunicPvP.inst());
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::tryRequestTimeout, 0, 20L);
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(RunicPvP.inst(), this::checkDuelRadius, 0, 20L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(RunicPvP.inst(), this::tryRequestTimeout, 0, 20L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(RunicPvP.inst(), this::checkDuelRadius, 0, 20L);
     }
 
     /**
@@ -131,6 +131,18 @@ public class DuelManager implements Listener {
                 RunicCore.getSpellAPI().healPlayer(killer, killer, 999999);
             }
         }
+    }
+
+    /**
+     * Party members can no longer heal party members who are in a duel
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    private void onRunicHeal(SpellHealEvent event) {
+        if (!(event.getEntity() instanceof Player target) || !this.isInDuel(target) || event.getPlayer().getUniqueId().equals(target.getUniqueId())) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 
     /**
