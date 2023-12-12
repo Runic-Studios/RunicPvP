@@ -13,4 +13,5 @@ dependencies {
     compileOnly(project(":Projects:Common"))
     compileOnly(project(":Projects:Database"))
     compileOnly(commonLibs.holographicdisplays)
+    compileOnly(commonLibs.protocollib)
 }

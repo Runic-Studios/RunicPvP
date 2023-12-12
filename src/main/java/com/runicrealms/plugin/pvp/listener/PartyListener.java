@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.pvp.listener;
 
-import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.party.event.PartyJoinEvent;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -14,19 +14,19 @@ public class PartyListener implements Listener {
     public void onPartyJoin(PartyJoinEvent event) {
 
         int slotLeader = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getParty().getLeader().getUniqueId());
-        int slotMember = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getMember().getUniqueId());
+        int slotMember = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getJoining().getUniqueId());
         boolean isLeaderOutlaw = RunicPvP.getAPI().isOutlaw(event.getParty().getLeader(), slotLeader);
-        boolean isMemberOutlaw = RunicPvP.getAPI().isOutlaw(event.getMember(), slotMember);
+        boolean isMemberOutlaw = RunicPvP.getAPI().isOutlaw(event.getJoining(), slotMember);
         boolean sameStatus = isLeaderOutlaw == isMemberOutlaw;
 
         if (!sameStatus) {
             event.setCancelled(true);
             event.getParty().getLeader().sendMessage
                     (
-                            ChatColor.GREEN + "[Party] " + ChatColor.WHITE + event.getMember().getName() +
+                            ChatColor.GREEN + "[Party] " + ChatColor.WHITE + event.getJoining().getName() +
                                     ChatColor.RED + " tried to join your party, but their outlaw status does not match yours!"
                     );
-            event.getMember().sendMessage
+            event.getJoining().sendMessage
                     (
                             ChatColor.GREEN + "[Party] " + ChatColor.RED + "You tried to join " +
                                     ChatColor.WHITE + event.getParty().getLeader().getName() + ChatColor.RED + "'s party, " +
