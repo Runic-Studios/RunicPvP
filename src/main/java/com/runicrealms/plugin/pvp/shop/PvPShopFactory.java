@@ -1,10 +1,11 @@
 package com.runicrealms.plugin.pvp.shop;
 
-import com.runicrealms.plugin.pvp.RunicPvP;
+import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.common.util.ChatUtils;
 import com.runicrealms.plugin.item.shops.RunicItemRunnable;
 import com.runicrealms.plugin.item.shops.RunicShopGeneric;
 import com.runicrealms.plugin.item.shops.RunicShopItem;
+import com.runicrealms.plugin.pvp.RunicPvP;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +28,7 @@ public class PvPShopFactory {
         if (meta != null && meta.getLore() != null) {
             meta.setDisplayName(ChatColor.YELLOW + "Toggle Outlaw Mode");
             List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY + "Lv. Min " + ChatColor.WHITE + RunicPvP.getAPI().getMinimumOutlawLevel());
+            lore.add(ChatColor.GRAY + "Lv. Min " + ChatColor.WHITE + RunicCommon.getPvPAPI().getMinimumOutlawLevel());
             lore.add("");
             lore.addAll(ChatUtils.formattedText(
                     "&7This will toggle &4&LOUTLAW &4&lMODE&7! While in this mode, " +
@@ -47,7 +48,7 @@ public class PvPShopFactory {
     }
 
     private RunicItemRunnable runShopBuy() {
-        return RunicPvP.getAPI()::toggleOutlaw;
+        return RunicCommon.getPvPAPI()::toggleOutlaw;
     }
 
     public ItemStack toggleOutlawIcon() {
@@ -60,4 +61,5 @@ public class PvPShopFactory {
         }
         return vendorItem;
     }
+
 }

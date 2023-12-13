@@ -1,10 +1,9 @@
 package com.runicrealms.plugin.pvp.listener;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.SafeZoneLocation;
 import com.runicrealms.plugin.api.event.AllyVerifyEvent;
-import com.runicrealms.plugin.pvp.api.event.RunicPvPEvent;
+import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.events.EnemyVerifyEvent;
 import com.runicrealms.plugin.events.EnterCombatEvent;
 import com.runicrealms.plugin.events.LeaveCombatEvent;
@@ -12,6 +11,7 @@ import com.runicrealms.plugin.events.MagicDamageEvent;
 import com.runicrealms.plugin.events.PhysicalDamageEvent;
 import com.runicrealms.plugin.events.RunicDeathEvent;
 import com.runicrealms.plugin.player.CombatType;
+import com.runicrealms.plugin.pvp.RunicPvPEvent;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,13 +38,13 @@ public class PvPListener implements Listener {
         if (!(event.getRecipient() instanceof Player recipient)) return;
         if (event.getRecipient().equals(event.getCaster())) return; // caster healed itself
         // If combat is an option, these are not allies
-        if (RunicPvP.getAPI().playersCanFight(event.getCaster(), recipient)) {
+        if (RunicCommon.getPvPAPI().playersCanFight(event.getCaster(), recipient)) {
             event.setCancelled(true);
             return;
         }
         // If the caster or recipient is an outlaw, cancel event if players not in party
-        if (RunicPvP.getAPI().isOutlaw(event.getCaster(), RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getCaster().getUniqueId()))
-                || RunicPvP.getAPI().isOutlaw(recipient, RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(recipient.getUniqueId()))) {
+        if (RunicCommon.getPvPAPI().isOutlaw(event.getCaster(), RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getCaster().getUniqueId()))
+                || RunicCommon.getPvPAPI().isOutlaw(recipient, RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(recipient.getUniqueId()))) {
             if (!RunicCore.getPartyAPI().isPartyMember(event.getCaster().getUniqueId(), recipient)) {
                 event.setCancelled(true);
             }
@@ -60,11 +60,11 @@ public class PvPListener implements Listener {
         Player caster = event.getCaster();
         int slotCaster = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(caster.getUniqueId());
         int slotVictim = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(victim.getUniqueId());
-        boolean isOutlawCaster = RunicPvP.getAPI().isOutlaw(caster, slotCaster);
-        boolean isOutlawVictim = RunicPvP.getAPI().isOutlaw(victim, slotVictim);
+        boolean isOutlawCaster = RunicCommon.getPvPAPI().isOutlaw(caster, slotCaster);
+        boolean isOutlawVictim = RunicCommon.getPvPAPI().isOutlaw(victim, slotVictim);
         if (!( // Negation
                 (isOutlawCaster && isOutlawVictim) // Both players are outlaw
-                        || RunicPvP.getAPI().areDueling(caster, victim) // They are dueling
+                        || RunicCommon.getPvPAPI().areDueling(caster, victim) // They are dueling
         ))
             event.setCancelled(true);
     }
@@ -112,10 +112,10 @@ public class PvPListener implements Listener {
     @EventHandler
     public void onSpellDamage(MagicDamageEvent event) {
         if (!(event.getVictim() instanceof Player victim)) return;
-        if (!RunicPvP.getAPI().playersCanFight(event.getPlayer(), victim)) {
+        if (!RunicCommon.getPvPAPI().playersCanFight(event.getPlayer(), victim)) {
             event.setCancelled(true);
         } else {
-            if (RunicPvP.getAPI().canCreatePvPEvent(event.getPlayer(), victim)) {
+            if (RunicCommon.getPvPAPI().canCreatePvPEvent(event.getPlayer(), victim)) {
                 Bukkit.getPluginManager().callEvent(new RunicPvPEvent(event.getPlayer(), victim));
             } else {
                 Bukkit.getPluginManager().callEvent(new EnterCombatEvent(event.getPlayer(), CombatType.PLAYER));
@@ -130,10 +130,10 @@ public class PvPListener implements Listener {
     @EventHandler
     public void onWeaponDamage(PhysicalDamageEvent event) {
         if (!(event.getVictim() instanceof Player victim)) return;
-        if (!RunicPvP.getAPI().playersCanFight(event.getPlayer(), victim)) {
+        if (!RunicCommon.getPvPAPI().playersCanFight(event.getPlayer(), victim)) {
             event.setCancelled(true);
         } else {
-            if (RunicPvP.getAPI().canCreatePvPEvent(event.getPlayer(), victim)) {
+            if (RunicCommon.getPvPAPI().canCreatePvPEvent(event.getPlayer(), victim)) {
                 Bukkit.getPluginManager().callEvent(new RunicPvPEvent(event.getPlayer(), victim));
             } else {
                 Bukkit.getPluginManager().callEvent(new EnterCombatEvent(event.getPlayer(), CombatType.PLAYER));

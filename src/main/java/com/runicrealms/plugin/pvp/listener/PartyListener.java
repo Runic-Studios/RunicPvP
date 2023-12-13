@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.pvp.listener;
 
+import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.party.event.PartyJoinEvent;
-import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -15,8 +15,8 @@ public class PartyListener implements Listener {
 
         int slotLeader = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getParty().getLeader().getUniqueId());
         int slotMember = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getJoining().getUniqueId());
-        boolean isLeaderOutlaw = RunicPvP.getAPI().isOutlaw(event.getParty().getLeader(), slotLeader);
-        boolean isMemberOutlaw = RunicPvP.getAPI().isOutlaw(event.getJoining(), slotMember);
+        boolean isLeaderOutlaw = RunicCommon.getPvPAPI().isOutlaw(event.getParty().getLeader(), slotLeader);
+        boolean isMemberOutlaw = RunicCommon.getPvPAPI().isOutlaw(event.getJoining(), slotMember);
         boolean sameStatus = isLeaderOutlaw == isMemberOutlaw;
 
         if (!sameStatus) {

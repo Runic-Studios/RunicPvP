@@ -1,12 +1,14 @@
 package com.runicrealms.plugin.pvp;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.pvp.api.RunicPvPAPI;
+import com.runicrealms.plugin.common.RunicCommon;
+import com.runicrealms.plugin.common.api.PvPData;
+import com.runicrealms.plugin.common.api.RunicPvPAPI;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.rdb.event.CharacterDeleteEvent;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
 import com.runicrealms.plugin.rdb.event.CharacterSelectEvent;
-import com.runicrealms.plugin.utilities.NametagHandler;
+import com.runicrealms.plugin.utilities.NameTagColorHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -14,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -23,7 +26,7 @@ import java.util.logging.Level;
  * Implementation of API class
  */
 public class RunicPvPManager implements Listener, RunicPvPAPI {
-    private final HashMap<UUID, PvPData> pvpDataMap = new HashMap<>();
+    private final HashMap<UUID, PlayerPvPData> pvpDataMap = new HashMap<>();
 
     public RunicPvPManager() {
         Bukkit.getPluginManager().registerEvents(this, RunicPvP.inst());
@@ -36,8 +39,8 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
 
     @Override
     public boolean canCreatePvPEvent(Player player, Player victim) {
-        if (RunicPvP.getAPI().playersCanFight(player, victim)) {
-            return !RunicPvP.getAPI().areDueling(player, victim);
+        if (RunicCommon.getPvPAPI().playersCanFight(player, victim)) {
+            return !RunicCommon.getPvPAPI().areDueling(player, victim);
         } else {
             return false;
         }
@@ -59,10 +62,8 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
     }
 
     @Override
-    public PvPData loadPvpData(UUID uuid) {
-        PvPData data = new PvPData(uuid);
-        pvpDataMap.put(uuid, data);
-        return data;
+    public boolean isOutlaw(Player player) {
+        return pvpDataMap.get(player.getUniqueId()).isOutlawEnabled();
     }
 
     @Override
@@ -73,8 +74,8 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
         if (RunicCore.getPartyAPI().isPartyMember(player.getUniqueId(), victim)) return false;
         int slotPlayer = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
         int slotVictim = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(victim.getUniqueId());
-        boolean bothOutlaws = RunicPvP.getAPI().isOutlaw(player, slotPlayer) && RunicPvP.getAPI().isOutlaw(victim, slotVictim);
-        boolean areDueling = RunicPvP.getAPI().areDueling(player, victim);
+        boolean bothOutlaws = RunicCommon.getPvPAPI().isOutlaw(player, slotPlayer) && RunicCommon.getPvPAPI().isOutlaw(victim, slotVictim);
+        boolean areDueling = RunicCommon.getPvPAPI().areDueling(player, victim);
         boolean damagerInSafezone = RunicCore.getRegionAPI().isSafezone(player.getLocation());
         boolean victimInSafezone = RunicCore.getRegionAPI().isSafezone(victim.getLocation());
         return (bothOutlaws || areDueling) && (!damagerInSafezone && !victimInSafezone);
@@ -102,13 +103,18 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
         // Toggle their current outlaw status from whatever it currently is
         boolean isOutlaw = isOutlaw(player, slot);
         this.pvpDataMap.get(player.getUniqueId()).setOutlawEnabled(slot, !isOutlaw);
-        NametagHandler.updateNametag(player, slot);
+        NameTagColorHandler.setGlobalColor(player, !isOutlaw ? NameTagColorHandler.NameColor.OUTlAW : NameTagColorHandler.NameColor.DEFAULT);
         RunicCore.getScoreboardAPI().updatePlayerScoreboard(player);
+    }
+
+    @Override
+    public @Nullable PvPData getPvPData(Player player) {
+        return pvpDataMap.get(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onCharacterDelete(CharacterDeleteEvent event) {
-        PvPData data = pvpDataMap.get(event.getPlayer().getUniqueId());
+        PlayerPvPData data = pvpDataMap.get(event.getPlayer().getUniqueId());
 
         if (data == null) {
             RunicPvP.inst().getLogger().log(Level.SEVERE, "There was an error getting " + event.getPlayer().getName() + "'s pvp data from the cache!");
@@ -125,7 +131,14 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCharacterSelect(CharacterSelectEvent event) {
-        loadPvpData(event.getPlayer().getUniqueId());
+        event.getPluginsToLoadData().add("pvp");
+        long startMillis = System.currentTimeMillis();
+        pvpDataMap.put(event.getPlayer().getUniqueId(), new PlayerPvPData(
+                event.getPlayer().getUniqueId(),
+                () -> {
+                    event.getPluginsToLoadData().remove("pvp");
+                    Bukkit.getLogger().log(Level.INFO, "RunicPvP took: " + (System.currentTimeMillis() - startMillis) + "ms to load");
+                }));
     }
 
 }

@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.pvp.api.event;
+package com.runicrealms.plugin.pvp;
 
 import com.runicrealms.plugin.events.EnterCombatEvent;
 import com.runicrealms.plugin.player.CombatType;

@@ -8,6 +8,7 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.pvp.duel.Duel;
 import com.runicrealms.plugin.pvp.duel.DuelRequest;
@@ -113,7 +114,7 @@ public class CMDDuel extends BaseCommand {
                 player.sendMessage(DUEL_PREFIX + ChatColor.RED + "Your duel is beginning!");
                 return;
             }
-            if (RunicPvP.getAPI().isDueling(player)) {
+            if (RunicCommon.getPvPAPI().isDueling(player)) {
                 player.sendMessage(DUEL_PREFIX + ChatColor.RED + "You have already accepted a duel!");
                 return;
             }
