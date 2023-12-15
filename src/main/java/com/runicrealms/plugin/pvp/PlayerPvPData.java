@@ -20,7 +20,7 @@ public class PlayerPvPData implements PvPData {
         for (int i = 1; i <= RunicDatabase.getAPI().getDataAPI().getMaxCharacterSlot(); i++) {
             outlawEnabled.put(i, false);
         }
-        RunicCommon.getLuckPermsAPI().retrieveData(owner).thenAccept(data -> {
+        RunicCommon.getLuckPermsAPI().retrieveData(owner).then(data -> {
             if (data.containsKey("runic.outlaw")) {
                 String outlawString = data.getString("runic.outlaw");
                 if (!outlawString.isBlank()) {
