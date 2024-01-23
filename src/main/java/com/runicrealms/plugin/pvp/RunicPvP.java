@@ -5,7 +5,10 @@ import co.aikar.commands.PaperCommandManager;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
-import com.runicrealms.plugin.common.RunicCommon;
+import com.runicrealms.plugin.common.RunicAPI;
+import com.runicrealms.plugin.common.plugin.annotation.OnShutdown;
+import com.runicrealms.plugin.common.plugin.annotation.OnStartup;
+import com.runicrealms.plugin.common.plugin.RunicPlugin;
 import com.runicrealms.plugin.pvp.command.CMDDuel;
 import com.runicrealms.plugin.pvp.conquest.ConquestManager;
 import com.runicrealms.plugin.pvp.duel.DuelManager;
@@ -17,9 +20,8 @@ import com.runicrealms.plugin.pvp.shop.PvPShopFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public final class RunicPvP extends JavaPlugin {
+public final class RunicPvP extends RunicPlugin {
     public static final double OUTLAW_BONUS_EXP_PERCENT = 0.15; // exp and rep
     public static final int MINIMUM_OUTLAW_LEVEL = 25;
 
@@ -60,8 +62,8 @@ public final class RunicPvP extends JavaPlugin {
         return taskChainFactory.newSharedChain(name);
     }
 
-    @Override
-    public void onDisable() {
+    @OnShutdown
+    public void onShutdown() {
         plugin = null;
         conquestManager = null;
         duelManager = null;
@@ -69,11 +71,11 @@ public final class RunicPvP extends JavaPlugin {
         taskChainFactory = null;
     }
 
-    @Override
-    public void onEnable() {
+    @OnStartup
+    public void onStartup() {
         plugin = this;
         taskChainFactory = BukkitTaskChainFactory.create(this);
-        RunicCommon.registerPvPAPI(new RunicPvPManager()); // initialize API
+        RunicAPI.registerPvPAPI(new RunicPvPManager()); // initialize API
         conquestManager = new ConquestManager();
         duelManager = new DuelManager();
         Bukkit.getServer().getPluginManager().registerEvents(new PvPListener(), this);
