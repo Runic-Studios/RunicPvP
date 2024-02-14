@@ -7,6 +7,7 @@ import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
 import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.pvp.command.CMDDuel;
+import com.runicrealms.plugin.pvp.command.CMDOutlaw;
 import com.runicrealms.plugin.pvp.conquest.ConquestManager;
 import com.runicrealms.plugin.pvp.duel.DuelManager;
 import com.runicrealms.plugin.pvp.listener.OutlawExpListener;
@@ -82,6 +83,7 @@ public final class RunicPvP extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PartyListener(), this);
         commandManager = new PaperCommandManager(this);
         commandManager.registerCommand(new CMDDuel());
+        commandManager.registerCommand(new CMDOutlaw());
         commandManager.getCommandConditions().addCondition("is-player", context -> {
             if (!(context.getIssuer().getIssuer() instanceof Player))
                 throw new ConditionFailedException("This command cannot be run from console!");

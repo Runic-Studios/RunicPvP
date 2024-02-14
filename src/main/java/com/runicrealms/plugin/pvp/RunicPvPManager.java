@@ -83,7 +83,12 @@ public class RunicPvPManager implements Listener, RunicPvPAPI {
 
     @Override
     public void toggleOutlaw(Player player) {
-        if (player.getLevel() < RunicPvP.MINIMUM_OUTLAW_LEVEL) {
+        toggleOutlaw(player, false);
+    }
+
+    @Override
+    public void toggleOutlaw(Player player, boolean ignoreLevelRequirement) {
+        if (!ignoreLevelRequirement && player.getLevel() < RunicPvP.MINIMUM_OUTLAW_LEVEL) {
             player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
             player.sendMessage
                     (
