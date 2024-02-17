@@ -2,9 +2,9 @@ package com.runicrealms.plugin.pvp.duel;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.events.RunicDeathEvent;
-import com.runicrealms.plugin.events.SpellHealEvent;
 import com.runicrealms.plugin.pvp.RunicPvP;
 import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
+import com.runicrealms.plugin.spellapi.event.SpellHealEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
